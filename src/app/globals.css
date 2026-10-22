@@ -1,0 +1,298 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (next-themes toggles `.dark` on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ───────────────────────────────────────────────────────────────────────────
+   ALO MART design tokens. Semantic names only — components never use raw
+   colors. Light = warm ivory showroom; Dark = deep navy showroom (designed,
+   not inverted). See docs/design-audit.md.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces — sampled from the approved homepage.png */
+  --background: #faf7f2;     /* warm ivory page */
+  --foreground: #14202f;
+  --surface: #ffffff;        /* cards, tiles, header search area */
+  --surface-muted: #f4f0e9;
+  --sand: #ede7de;
+  --utility: #f3eee6;        /* utility bar above the header */
+  --muted-foreground: #5a616b;
+  --border: #ebe5dc;
+  --border-strong: #d8cfc3;
+
+  --ink: #14202f;            /* deep navy: hero CTA, chips, headings */
+  --ink-foreground: #faf7f2;
+  --ink-muted: #b7bccb;
+  --ink-raised: #1f2c3e;
+
+  --brand: #c9183d;          /* crimson fills — primary CTA, cart-style buttons, badges */
+  --brand-text: #c9183d;     /* red text — prices, active tab, links (5.3:1 on ivory) */
+  --brand-foreground: #ffffff;
+  --brand-soft: #f7e4e2;     /* rose tint ("more" tile, discount chips) */
+  --brand-ink: #a3112f;      /* hover / text on brand-soft */
+
+  --success: #17803d;
+  --success-soft: #e7f5ec;
+  --warning: #9a5b00;
+  --warning-soft: #fdf3e1;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+
+  --image-well: #f3efe9;     /* behind product photography */
+  --skeleton: #ebe4db;
+  --focus-ring: #c9183d;
+  --overlay: rgb(20 32 47 / 0.5);   /* modal/drawer scrim */
+  --scrim: rgb(9 14 22 / 0.62);     /* text-on-photo gradient stop */
+
+  --footer: #111d2a;         /* navy footer band */
+  --footer-foreground: #f3efe8;
+  --footer-muted: #9aa4b2;
+  --footer-border: #223042;
+
+  --elevation-card: 0 1px 2px rgb(20 32 47 / 0.04), 0 6px 18px -10px rgb(20 32 47 / 0.14);
+  --elevation-raised: 0 2px 6px rgb(20 32 47 / 0.06), 0 22px 44px -20px rgb(20 32 47 / 0.28);
+  --elevation-popover: 0 24px 60px -20px rgb(20 32 47 / 0.35);
+
+  --panel-radius: 1.5rem;    /* hero, bands */
+  --card-radius: 1rem;       /* product/category/brand cards */
+  --well-radius: 0.75rem;    /* image wells inside cards */
+  --control-radius: 0.75rem;
+
+  --easing-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 260ms;
+  --duration-slow: 520ms;
+
+  --header-height: 4.25rem;  /* height of the sticky header (mobile bar) */
+}
+
+/* Desktop sticky header height (floating navigation row). */
+@media (min-width: 64rem) {
+  :root {
+    --header-height: 5.25rem;
+  }
+}
+
+:root.dark {
+  --background: #0b1120;
+  --foreground: #f4efe8;
+  --surface: #131b2e;
+  --surface-muted: #1a2338;
+  --sand: #232c42;
+  --utility: #080d19;
+  --muted-foreground: #a9adb5;
+  --border: #243049;
+  --border-strong: #33405e;
+
+  --ink: #f4efe8;            /* inverted emphasis: ivory buttons on navy */
+  --ink-foreground: #10182d;
+  --ink-muted: #4a5164;
+  --ink-raised: #e6dfd5;
+
+  --brand: #d92b4b;          /* fills: white text stays 4.8:1 */
+  --brand-text: #ff7a8f;     /* red text on navy: 6.9:1 */
+  --brand-foreground: #ffffff;
+  --brand-soft: #3b1622;
+  --brand-ink: #ff8a9c;
+
+  --success: #4ade80;
+  --success-soft: #12301f;
+  --warning: #fbbf24;
+  --warning-soft: #33280f;
+  --danger: #f87171;
+  --danger-soft: #3a1515;
+
+  --image-well: #ebe6df;     /* stays light: product cut-outs are shot on white */
+  --skeleton: #1d2740;
+  --focus-ring: #ff8a9c;
+  --overlay: rgb(2 5 12 / 0.7);
+  --scrim: rgb(2 5 12 / 0.7);
+
+  --footer: #060a14;
+  --footer-foreground: #f3efe8;
+  --footer-muted: #8f98a6;
+  --footer-border: #1a2335;
+
+  --elevation-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px -16px rgb(0 0 0 / 0.6);
+  --elevation-raised: 0 2px 4px rgb(0 0 0 / 0.3), 0 20px 44px -18px rgb(0 0 0 / 0.7);
+  --elevation-popover: 0 24px 60px -20px rgb(0 0 0 / 0.75);
+}
+
+/* Chips and tags that sit on photography stay light in both themes. */
+:root {
+  --on-media: #ffffff;
+  --on-media-foreground: #14202f;
+  --on-media-accent: #c9183d;
+}
+
+/* Navy band (deals) — navy in both themes, a step lighter than the dark page. */
+.panel-ink {
+  --panel-bg: #14202f;
+  --panel-fg: #faf7f2;
+  --panel-muted: #b7bccb;
+  --panel-raised: #1f2c3e;
+}
+:root.dark .panel-ink {
+  --panel-bg: #18233a;
+  --panel-raised: #22304b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-sand: var(--sand);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-raised: var(--ink-raised);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-text: var(--brand-text);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-image-well: var(--image-well);
+  --color-skeleton: var(--skeleton);
+  --color-utility: var(--utility);
+  --color-on-media: var(--on-media);
+  --color-on-media-foreground: var(--on-media-foreground);
+  --color-on-media-accent: var(--on-media-accent);
+  --color-overlay: var(--overlay);
+  --color-scrim: var(--scrim);
+  --color-footer: var(--footer);
+  --color-footer-foreground: var(--footer-foreground);
+  --color-footer-muted: var(--footer-muted);
+  --color-footer-border: var(--footer-border);
+  --color-panel: var(--panel-bg);
+  --color-panel-foreground: var(--panel-fg);
+  --color-panel-muted: var(--panel-muted);
+  --color-panel-raised: var(--panel-raised);
+
+  --radius-panel: var(--panel-radius);
+  --radius-card: var(--card-radius);
+  --radius-well: var(--well-radius);
+  --radius-control: var(--control-radius);
+
+  --shadow-card: var(--elevation-card);
+  --shadow-raised: var(--elevation-raised);
+  --shadow-popover: var(--elevation-popover);
+
+  --ease-out-soft: var(--easing-out);
+
+  --font-sans: var(--font-stack);
+
+  /* 1400px: the approved design's 6-across product rows start here. */
+  --breakpoint-wide: 87.5rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-height) + 1rem);
+  }
+  /* Script-led font stacks: Arabic pages lead with Tajawal, others with Geist. */
+  html {
+    --font-stack: var(--font-latin-face), var(--font-arabic-face), ui-sans-serif, system-ui, sans-serif;
+  }
+  html[lang="ar"] {
+    --font-stack: var(--font-arabic-face), var(--font-latin-face), ui-sans-serif, system-ui, sans-serif;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-stack);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--brand-foreground);
+  }
+}
+
+@layer utilities {
+  /* Headline tracking that only tightens Latin script (Arabic joins must not be squeezed). */
+  .tracking-display {
+    letter-spacing: -0.025em;
+  }
+  html[lang="ar"] .tracking-display {
+    letter-spacing: 0;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Overlay motion: answers a user action (open/close), mirrored in RTL ── */
+@keyframes sheet-in {
+  from {
+    transform: translateX(var(--sheet-from, 100%));
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.99);
+  }
+}
+.sheet-end {
+  --sheet-from: 100%;
+  animation: sheet-in var(--duration-base) var(--easing-out);
+}
+[dir="rtl"] .sheet-end {
+  --sheet-from: -100%;
+}
+.sheet-overlay {
+  animation: fade-in var(--duration-base) var(--easing-out);
+}
+.mega-menu,
+[data-radix-popper-content-wrapper] > [role="dialog"],
+[data-radix-popper-content-wrapper] > [role="menu"] {
+  animation: menu-in var(--duration-fast) var(--easing-out);
+  transform-origin: var(--radix-popper-transform-origin);
+}
+
+/* Bottom sheets (mobile filters) rise from the bottom edge. */
+@keyframes sheet-up-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+.sheet-up {
+  animation: sheet-up-in var(--duration-base) var(--easing-out);
+}
