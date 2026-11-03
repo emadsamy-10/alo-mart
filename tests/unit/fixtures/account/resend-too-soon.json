@@ -1,0 +1,7 @@
+{
+  "http": 429,
+  "status": false,
+  "message": "Please wait a minute before requesting another email.",
+  "data": null,
+  "code": "resend_too_soon"
+}

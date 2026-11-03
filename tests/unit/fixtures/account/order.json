@@ -1,0 +1,139 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Success",
+  "data": {
+    "id": "d7dfe5ca-1253-4a92-8fbd-83aa6c31ac90",
+    "order_number": "AM-261027-FWVJ75",
+    "status": "placed",
+    "payment_status": "unpaid",
+    "placed_at": "2026-10-27T07:35:03+00:00",
+    "market": {
+      "id": 1,
+      "code": "EG"
+    },
+    "currency": {
+      "id": 1,
+      "code": "EGP",
+      "decimal_places": 2
+    },
+    "store_count": 1,
+    "item_count": 1,
+    "quantity_count": 2,
+    "totals": {
+      "merchandise_net": "692.98",
+      "merchandise_tax": "97.02",
+      "merchandise_gross": "790.00",
+      "shipping_net": "43.86",
+      "shipping_tax": "6.14",
+      "shipping_gross": "50.00",
+      "tax_total": "103.16",
+      "grand_total": "840.00"
+    },
+    "tax": {
+      "code": "EG_VAT",
+      "name": "VAT",
+      "rate_percent": "14.000",
+      "price_includes_tax": true,
+      "shipping_taxable": true
+    },
+    "delivery_address": {
+      "label": "Home",
+      "recipient_name": "Fixture Shopper",
+      "recipient_phone": "01012345678",
+      "country": {
+        "id": 1,
+        "name": "Egypt",
+        "code": "EG"
+      },
+      "region": {
+        "id": 1,
+        "name": "Cairo"
+      },
+      "city": {
+        "id": 1,
+        "name": "Nasr City"
+      },
+      "address_line_1": "12 Nile St",
+      "address_line_2": null,
+      "building": "4",
+      "floor": "2",
+      "unit": "7",
+      "postal_code": null,
+      "delivery_instructions": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "stores": [
+      {
+        "id": "47ca6669-6ba0-4098-8216-a4f1b44af026",
+        "sequence": 1,
+        "status": "placed",
+        "store": {
+          "id": 3,
+          "name": "Mada Lifestyle",
+          "slug": "mada-lifestyle"
+        },
+        "shipping": {
+          "shipping_method_id": 2,
+          "name": "Standard delivery",
+          "fee": "50.00",
+          "is_free_shipping": false,
+          "delivery_estimate": {
+            "min_days": 2,
+            "max_days": 5
+          }
+        },
+        "item_count": 1,
+        "quantity_count": 2,
+        "totals": {
+          "merchandise_net": "692.98",
+          "merchandise_tax": "97.02",
+          "merchandise_gross": "790.00",
+          "shipping_net": "43.86",
+          "shipping_tax": "6.14",
+          "shipping_gross": "50.00",
+          "tax_total": "103.16",
+          "grand_total": "840.00"
+        },
+        "items": [
+          {
+            "id": 1,
+            "product": {
+              "id": 55,
+              "name": "Peak Form Aluminium Sports Bottle 750 ml",
+              "slug": "peak-form-aluminium-sports-bottle"
+            },
+            "variant": {
+              "id": 86,
+              "sku": "PF-BOTTLE-750-WHT",
+              "options": [
+                {
+                  "attribute": {
+                    "id": 1,
+                    "code": "color",
+                    "name": "Color"
+                  },
+                  "value": {
+                    "id": 2,
+                    "code": "white",
+                    "name": "White",
+                    "display_value": "#F5F5F2"
+                  }
+                }
+              ]
+            },
+            "quantity": 2,
+            "unit_list_price": "395.0000",
+            "unit_sale_price": null,
+            "unit_price": "395.0000",
+            "line_subtotal": "790.00",
+            "line_net": "692.98",
+            "line_tax": "97.02",
+            "line_gross": "790.00"
+          }
+        ]
+      }
+    ]
+  }
+}

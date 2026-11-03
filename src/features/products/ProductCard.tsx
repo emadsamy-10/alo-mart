@@ -27,9 +27,14 @@ interface ProductCardProps {
  * The storefront's one product card (approved homepage.png): white card,
  * photo-first, title, a quiet store line where the mockup shows ratings,
  * and a bold red price. Everything is API data — no ratings. The heart saves
- * to the guest wishlist; there is no quick-add because card data carries no
- * variant ids (the shopper picks options on the product page). The whole card
- * is one stretched link.
+ * to the guest wishlist; there is no quick-add because a card never knows the
+ * shopper's full option choice — the product page does. The whole card is one
+ * stretched link.
+ *
+ * On a filtered listing the API may add `matched_variant`: the cheapest variant
+ * satisfying every variant-level filter. Then the card shows THAT variant's
+ * price and stock (never a cheaper variant that did not match) and opens the
+ * product page with it preselected (`?variant=<id>`, validated there).
  */
 export function ProductCard({ product, sizes, priority, variant = "standard", className }: ProductCardProps) {
   const locale = useLocale();
@@ -39,6 +44,9 @@ export function ProductCard({ product, sizes, priority, variant = "standard", cl
   const compact = variant === "compact";
   // Brand when the product has one, else its category: a quiet line that orients without clutter.
   const eyebrow = product.brand?.name || product.category?.name;
+  const matched = product.matched_variant ?? null;
+  const inStock = matched ? matched.is_in_stock : product.is_in_stock;
+  const href = matched ? `/products/${product.slug}?variant=${matched.id}` : `/products/${product.slug}`;
 
   return (
     <article
@@ -68,7 +76,7 @@ export function ProductCard({ product, sizes, priority, variant = "standard", cl
               {t("off", { percent: formatPercent(price.discountPercent, locale) })}
             </span>
           ) : null}
-          {!product.is_in_stock ? (
+          {!inStock ? (
             <span className="rounded-lg bg-on-media/95 px-2.5 py-1.5 text-xs leading-none font-semibold text-on-media-foreground shadow-sm">
               {t("outOfStock")}
             </span>
@@ -87,7 +95,7 @@ export function ProductCard({ product, sizes, priority, variant = "standard", cl
           )}
         >
           <Link
-            href={`/products/${product.slug}`}
+            href={href}
             className="outline-none after:absolute after:inset-0 after:rounded-card focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-(--focus-ring)"
           >
             {product.name}
@@ -102,11 +110,14 @@ export function ProductCard({ product, sizes, priority, variant = "standard", cl
             </span>
           </p>
         ) : null}
-        <ProductPrice
-          price={price}
-          size={compact ? "sm" : "md"}
-          className={compact ? "mt-auto pt-2.5" : "mt-auto border-t border-border/70 pt-3"}
-        />
+        <div className={compact ? "mt-auto pt-2.5" : "mt-auto border-t border-border/70 pt-3"}>
+          <ProductPrice price={price} size={compact ? "sm" : "md"} />
+          {price?.matched ? (
+            <p className="mt-1.5 text-xs text-muted-foreground" data-testid="matched-price-note">
+              {t("matchedOption")}
+            </p>
+          ) : null}
+        </div>
       </div>
     </article>
   );

@@ -65,8 +65,8 @@ function DrawerBody({ lines, onNavigate }: { lines: ReturnType<typeof useCart>["
         ))}
       </ul>
       <div className="space-y-4 border-t border-border px-5 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-        <CartSummary />
-        <Link href="/cart" onClick={onNavigate} className={buttonClass({ variant: "primary", size: "lg" }, "w-full")}>
+        <CartSummary onNavigate={onNavigate} />
+        <Link href="/cart" onClick={onNavigate} className={buttonClass({ variant: "outline", size: "lg" }, "w-full")}>
           {t("viewCart")}
         </Link>
       </div>

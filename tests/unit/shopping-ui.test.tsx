@@ -14,6 +14,15 @@ import { wishlistStore } from "@/features/wishlist/store";
 import en from "../../messages/en.json";
 
 vi.mock("@/features/cart/actions", () => ({ refreshCartLines: vi.fn(async () => []), refreshWishlist: vi.fn(async () => []) }));
+// Account cart/wishlist server actions: a guest must never call them.
+const accountActions = vi.hoisted(() => ({
+  accountCartAdd: vi.fn(),
+  accountCartUpdate: vi.fn(),
+  accountCartRemove: vi.fn(),
+  accountCartClear: vi.fn(),
+  accountWishlistToggle: vi.fn(),
+}));
+vi.mock("@/features/account/shop-actions", () => accountActions);
 
 beforeAll(() => {
   Element.prototype.scrollTo = function () {} as typeof Element.prototype.scrollTo;
@@ -175,6 +184,22 @@ describe("PurchasePanel", () => {
     act(() => fireEvent.click(screen.getByTestId("add-to-cart")));
     expect(cartStore.get().EG).toMatchObject([{ variantId: 1, quantity: 2, variantLabel: "Black / S", unitPrice: "449.0000" }]);
     expect(JSON.parse(localStorage.getItem("alo_cart_v1")!).EG[0].quantity).toBe(2);
+    expect(accountActions.accountCartAdd).not.toHaveBeenCalled();
+  });
+
+  it("signed in (before the account sync ran): adds to the account, never to this device's guest cart", () => {
+    document.body.dataset.account = "1";
+    accountActions.accountCartAdd.mockResolvedValue({ ok: true, data: { lines: [], itemIds: {} } });
+    try {
+      panel();
+      act(() => fireEvent.click(screen.getByTestId("add-to-cart")));
+      expect(accountActions.accountCartAdd).toHaveBeenCalledWith("EG", 1, 1);
+      expect(cartStore.mode()).toBe("memory");
+      expect(JSON.parse(localStorage.getItem("alo_cart_v1") ?? "{}")).toEqual({});
+    } finally {
+      delete document.body.dataset.account;
+      cartStore.setMode("local");
+    }
   });
 });
 

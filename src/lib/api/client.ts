@@ -19,15 +19,26 @@ import { env } from "@/lib/env";
  * nothing user-specific can enter the shared cache.
  */
 
-export type ApiErrorKind = "not_found" | "network" | "timeout" | "server" | "invalid_response";
+export type ApiErrorKind = "not_found" | "validation" | "network" | "timeout" | "server" | "invalid_response";
 
 export type ApiResult<T> =
   | { ok: true; data: T }
-  | { ok: false; error: { kind: ApiErrorKind; status?: number; message?: string } };
+  | { ok: false; error: ApiError };
+
+export interface ApiError {
+  kind: ApiErrorKind;
+  status?: number;
+  message?: string;
+  /** Field errors of a 422 (`validation`), keyed as the API reports them (e.g. `attr.color`). */
+  errors?: Record<string, string[]>;
+}
+
+/** A query value: scalars are set once, arrays append the key once per value (`brand_id[]=1&brand_id[]=2`). */
+export type QueryValue = string | number | undefined | null | readonly (string | number)[];
 
 export interface ApiRequestOptions {
   locale: string;
-  query?: Record<string, string | number | undefined | null>;
+  query?: Record<string, QueryValue>;
   /** Seconds the response may be reused from the data cache. */
   revalidate: number;
   tags?: string[];
@@ -36,7 +47,11 @@ export interface ApiRequestOptions {
 export function buildApiUrl(path: string, query?: ApiRequestOptions["query"]): string {
   const url = new URL(`${env.apiBaseUrl}/${path.replace(/^\/+/, "")}`);
   for (const [key, value] of Object.entries(query ?? {})) {
-    if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, String(value));
+    if (Array.isArray(value)) {
+      for (const item of value) url.searchParams.append(key, String(item));
+    } else if (value !== undefined && value !== null && value !== "") {
+      url.searchParams.set(key, String(value));
+    }
   }
   return url.toString();
 }
@@ -45,6 +60,16 @@ interface Envelope {
   status?: unknown;
   message?: unknown;
   data?: unknown;
+  errors?: unknown;
+}
+
+function fieldErrors(value: unknown): Record<string, string[]> | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const out: Record<string, string[]> = {};
+  for (const [key, messages] of Object.entries(value)) {
+    if (Array.isArray(messages)) out[key] = messages.filter((m): m is string => typeof m === "string");
+  }
+  return out;
 }
 
 export async function apiGet<S extends z.ZodType>(
@@ -75,10 +100,11 @@ export async function apiGet<S extends z.ZodType>(
   }
 
   if (!response.ok || body?.status === false) {
-    const kind: ApiErrorKind = response.status === 404 ? "not_found" : "server";
+    const kind: ApiErrorKind = response.status === 404 ? "not_found" : response.status === 422 ? "validation" : "server";
     const message = typeof body?.message === "string" ? body.message : undefined;
-    if (kind !== "not_found") logFailure(url, kind, `${response.status} ${message ?? ""}`);
-    return { ok: false, error: { kind, status: response.status, message } };
+    if (kind === "server") logFailure(url, kind, `${response.status} ${message ?? ""}`);
+    const errors = kind === "validation" ? fieldErrors(body?.errors) : undefined;
+    return { ok: false, error: { kind, status: response.status, message, ...(errors ? { errors } : {}) } };
   }
 
   const parsed = schema.safeParse(body?.data);

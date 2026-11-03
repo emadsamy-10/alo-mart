@@ -8,8 +8,12 @@ import { StatusPanel } from "@/components/shared/StatusPanel";
 import { buttonClass } from "@/components/ui/button";
 import { Link } from "@/lib/i18n/navigation";
 
-/** Render-time failure inside a localized page; header and footer stay usable. */
-export default function LocaleError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+/**
+ * Render-time failure inside a localized page; header and footer stay usable.
+ * "Try again" uses retry(), which RE-FETCHES the server segment (reset() would
+ * only re-render it and keep failing after an API outage has ended).
+ */
+export default function LocaleError({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   const t = useTranslations("States");
 
   useEffect(() => {
@@ -26,7 +30,7 @@ export default function LocaleError({ error, reset }: { error: Error & { digest?
         body={t("unexpectedBody")}
         action={
           <>
-            <button type="button" onClick={reset} className={buttonClass({ variant: "primary" })}>
+            <button type="button" onClick={() => retry()} className={buttonClass({ variant: "primary" })}>
               {t("retry")}
             </button>
             <Link href="/" className={buttonClass({ variant: "outline" })}>

@@ -109,3 +109,42 @@ export function currencyName(code: string, locale: string): string {
     return code;
   }
 }
+
+/** The currency mark formatMoney prints for this locale ("EGP" in English, "ج.م.‏" in Arabic). */
+export function currencyLabel(code: string, locale: string): string {
+  try {
+    const part = new Intl.NumberFormat(intlLocale(locale), {
+      style: "currency",
+      currency: code,
+      currencyDisplay: locale === "ar" ? "symbol" : "code",
+    })
+      .formatToParts(0)
+      .find((p) => p.type === "currency");
+    return part?.value.trim() || code;
+  } catch {
+    return code;
+  }
+}
+
+/**
+ * Isolates user text (e.g. a search term) inside translated copy, so a Latin
+ * term in an Arabic sentence (or vice versa) cannot reorder the surrounding
+ * quotes and punctuation (Unicode FSI … PDI).
+ */
+export function isolate(text: string): string {
+  return `⁨${text}⁩`;
+}
+
+/** "27 Oct 2026" (Latin digits in Arabic). Invalid input → "" (never a fake date). */
+export function formatDate(value: string | null | undefined, locale: string): string {
+  const time = value ? Date.parse(value) : NaN;
+  if (!Number.isFinite(time)) return "";
+  return new Intl.DateTimeFormat(intlLocale(locale), { day: "numeric", month: "short", year: "numeric" }).format(time);
+}
+
+/** "27 Oct 2026, 10:42" in the visitor's time zone. */
+export function formatDateTime(value: string | null | undefined, locale: string): string {
+  const time = value ? Date.parse(value) : NaN;
+  if (!Number.isFinite(time)) return "";
+  return new Intl.DateTimeFormat(intlLocale(locale), { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(time);
+}

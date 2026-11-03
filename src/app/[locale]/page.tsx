@@ -72,6 +72,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             name: tm("siteName"),
             url: localizedUrl(seoConfig.siteUrl, locale, "/"),
             locale,
+            searchUrl: localizedUrl(seoConfig.siteUrl, locale, "/products"),
           }),
         ]}
       />

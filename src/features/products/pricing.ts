@@ -16,6 +16,8 @@ export interface PriceView {
   /** Real previous price, only when a real reduction exists. */
   regularAmount: string | null;
   discountPercent: number | null;
+  /** True when this is the price of the variant that matched the catalog filters (matched_variant). */
+  matched: boolean;
 }
 
 interface PricedCard {
@@ -24,9 +26,28 @@ interface PricedCard {
   price_to: string | null;
   has_price_range: boolean;
   deal?: { regular_price: string; sale_price: string; discount_percent?: number | null } | null;
+  matched_variant?: { price: string | null; sale_price: string | null; selling_price: string } | null;
 }
 
 export function priceViewFromCard(card: PricedCard): PriceView | null {
+  // A filtered listing reports the cheapest variant that satisfies EVERY
+  // variant-level filter; its price is the honest one to show, never the
+  // product-wide minimum (which may belong to a variant that did not match).
+  const matched = card.matched_variant;
+  const selling = parseAmount(matched?.selling_price);
+  if (matched && selling !== null) {
+    const list = parseAmount(matched.price);
+    const reduced = list !== null && list > selling;
+    return {
+      currency: card.currency,
+      amount: matched.selling_price,
+      maxAmount: null,
+      regularAmount: reduced ? matched.price : null,
+      discountPercent: reduced ? computePercent(list, selling) : null,
+      matched: true,
+    };
+  }
+
   const from = parseAmount(card.price_from);
   if (from === null || card.price_from === null) return null;
 
@@ -44,6 +65,7 @@ export function priceViewFromCard(card: PricedCard): PriceView | null {
     maxAmount: ranged && !realDeal ? card.price_to : null,
     regularAmount: realDeal ? deal.regular_price : null,
     discountPercent: realDeal ? (deal.discount_percent ?? computePercent(regular, sale)) : null,
+    matched: false,
   };
 }
 
@@ -58,7 +80,7 @@ interface PricedVariant {
  * sits next to a range it does not belong to.
  */
 export function priceViewFromDetail(detail: PricedCard & { variants: PricedVariant[] }): PriceView | null {
-  const base = priceViewFromCard({ ...detail, deal: null });
+  const base = priceViewFromCard({ ...detail, deal: null, matched_variant: null });
   if (!base || base.maxAmount) return base;
 
   let best: { price: string; sale: string; saleN: number; priceN: number } | null = null;

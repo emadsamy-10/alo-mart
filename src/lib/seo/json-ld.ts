@@ -18,8 +18,11 @@ export function organizationJsonLd(input: { siteUrl: string; name: string; logoU
   };
 }
 
-/** No SearchAction: the API has no text search yet, so we must not advertise one. */
-export function websiteJsonLd(input: { siteUrl: string; name: string; url: string; locale: string }): JsonLd {
+/**
+ * WebSite (+ SearchAction when a real search URL is given: the catalog search
+ * at /products?q=, backed by the API's text search).
+ */
+export function websiteJsonLd(input: { siteUrl: string; name: string; url: string; locale: string; searchUrl?: string }): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -28,6 +31,15 @@ export function websiteJsonLd(input: { siteUrl: string; name: string; url: strin
     url: input.url,
     inLanguage: input.locale,
     publisher: { "@id": `${input.siteUrl}/#organization` },
+    ...(input.searchUrl
+      ? {
+          potentialAction: {
+            "@type": "SearchAction",
+            target: { "@type": "EntryPoint", urlTemplate: `${input.searchUrl}?q={search_term_string}` },
+            "query-input": "required name=search_term_string",
+          },
+        }
+      : {}),
   };
 }
 

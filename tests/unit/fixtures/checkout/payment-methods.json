@@ -1,0 +1,11 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Success",
+  "data": [
+    {
+      "code": "card",
+      "name": "Card (sandbox)"
+    }
+  ]
+}

@@ -1,10 +1,13 @@
 "use client";
 
-import { ChevronDown, Heart, LayoutGrid, Menu, X } from "lucide-react";
+import { ChevronDown, Heart, LayoutGrid, Menu, UserRound, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
 import { useState } from "react";
+import type { HeaderAccount } from "@/features/account/ui/AccountMenu";
+import { SignOutButton } from "@/features/account/ui/AccountNav";
 import { Link } from "@/lib/i18n/navigation";
+import { HeaderSearchForm } from "./HeaderSearch";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import type { NavCategory } from "./nav-types";
@@ -14,8 +17,9 @@ import type { NavCategory } from "./nav-types";
  * RTL). Departments use native <details> so the accordion is accessible and
  * works with zero extra JS state.
  */
-export function MobileMenu({ departments }: { departments: NavCategory[] }) {
+export function MobileMenu({ departments, account = null }: { departments: NavCategory[]; account?: HeaderAccount | null }) {
   const t = useTranslations("Header");
+  const ta = useTranslations("Account.nav");
   const tc = useTranslations("Common");
   const tp = useTranslations("Preferences");
   const [open, setOpen] = useState(false);
@@ -44,6 +48,36 @@ export function MobileMenu({ departments }: { departments: NavCategory[] }) {
           <Dialog.Description className="sr-only">{t("mainNavigation")}</Dialog.Description>
 
           <nav aria-label={t("departments")} className="flex-1 overflow-y-auto overscroll-contain px-3 py-4">
+            <HeaderSearchForm className="mb-3" />
+            <div className="mb-3 rounded-2xl bg-surface p-3 shadow-card" data-testid="mobile-account">
+              {account ? (
+                <>
+                  <Link href="/account" onClick={close} className="flex min-h-11 items-center gap-2.5 px-1 text-base font-bold">
+                    <UserRound className="size-5 text-brand-text" aria-hidden />
+                    {ta("hello", { name: account.firstName })}
+                  </Link>
+                  <div className="mt-1 flex flex-wrap gap-1.5">
+                    <Link href="/account/orders" onClick={close} className="inline-flex h-11 items-center rounded-full bg-surface-muted px-4 text-sm font-semibold">
+                      {ta("orders")}
+                    </Link>
+                    <Link href="/account/addresses" onClick={close} className="inline-flex h-11 items-center rounded-full bg-surface-muted px-4 text-sm font-semibold">
+                      {ta("addresses")}
+                    </Link>
+                    <SignOutButton className="h-11 rounded-full!" />
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-wrap items-center gap-2">
+                  <UserRound className="ms-1 size-5 text-brand-text" aria-hidden />
+                  <Link href="/login" onClick={close} className="inline-flex h-11 items-center rounded-full bg-ink px-5 text-sm font-semibold text-ink-foreground">
+                    {ta("signIn")}
+                  </Link>
+                  <Link href="/register" onClick={close} className="inline-flex h-11 items-center rounded-full px-3 text-sm font-semibold text-brand-text">
+                    {ta("register")}
+                  </Link>
+                </div>
+              )}
+            </div>
             <ul className="mb-4 grid grid-cols-2 gap-2">
               <li>
                 <Link href="/products" onClick={close} className="flex min-h-12 items-center gap-2 rounded-2xl bg-surface px-3 text-sm font-semibold shadow-card">

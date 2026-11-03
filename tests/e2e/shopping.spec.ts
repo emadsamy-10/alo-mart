@@ -181,20 +181,23 @@ test.describe("all products", () => {
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/en\/products$/);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
 
-    // Category filter keeps the brand; tree expands along the active path.
-    await page.getByTestId("filter-category-electronics").click();
-    await page.getByTestId("filter-category-computers").click();
-    await page.getByTestId("filter-category-laptops").click();
-    await expect(page).toHaveURL(/category=laptops&brand=kairo-tech/);
+    // Category filter keeps the brand; the tree expands with its own buttons. A leaf adds no
+    // descendants parameter (it has no sub-categories to include).
+    const sidebar = page.getByRole("complementary");
+    await sidebar.getByRole("button", { name: "Show sub-categories of Electronics" }).click();
+    await sidebar.getByRole("button", { name: "Show sub-categories of Computers" }).click();
+    await sidebar.getByTestId("filter-category-laptops").click();
+    await expect(page).toHaveURL(/\?category=laptops&brand=kairo-tech$/);
     await expect(page.getByTestId("filter-chip")).toHaveCount(2);
+    await expect(page.getByTestId("catalog-results")).not.toHaveAttribute("aria-busy", "true");
     const count = await page.getByTestId("catalog-grid").locator("> li").count();
     expect(count).toBeGreaterThan(0);
 
     // Back/forward walk the URL history.
     await page.goBack();
-    await expect(page).toHaveURL(/category=computers&brand=kairo-tech/);
+    await expect(page).toHaveURL(/\/en\/products\?brand=kairo-tech$/);
     await page.goForward();
-    await expect(page).toHaveURL(/category=laptops&brand=kairo-tech/);
+    await expect(page).toHaveURL(/category=laptops&brand=kairo-tech$/);
 
     // Reload keeps the filtered state; removing a chip drops only that filter.
     await page.reload();
@@ -227,12 +230,14 @@ test.describe("all products", () => {
     await page.goto("/ar/products");
     await page.getByTestId("open-filters").click();
     const sheet = page.getByRole("dialog");
+    // Choices apply at once (the sheet stays open with a live total); "show results" closes it.
     await sheet.getByText("كايرو تك", { exact: true }).click();
-    await sheet.getByRole("button", { name: "عرض النتائج" }).click();
     await expect(page).toHaveURL(/\/ar\/products\?brand=kairo-tech$/);
+    await sheet.getByTestId("show-results").click();
+    await expect(sheet).toBeHidden();
     await expect(page.getByTestId("filter-chip")).toHaveCount(1);
     await page.getByTestId("open-filters").click();
-    await page.getByRole("dialog").getByRole("button", { name: "مسح الكل" }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "إعادة تعيين" }).click();
     await expect(page).toHaveURL(/\/ar\/products$/);
   });
 });

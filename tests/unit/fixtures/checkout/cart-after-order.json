@@ -1,0 +1,22 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Success",
+  "data": {
+    "market": {
+      "id": 1,
+      "code": "EG"
+    },
+    "currency": {
+      "code": "EGP",
+      "symbol": "ج.م",
+      "decimal_places": 2
+    },
+    "items": [],
+    "items_count": 0,
+    "total_quantity": 0,
+    "unavailable_items_count": 0,
+    "subtotal": "0.0000",
+    "updated_at": "2026-10-28T17:13:23.000000Z"
+  }
+}

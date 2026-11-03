@@ -1,7 +1,9 @@
 import { Container } from "@/components/shared/Container";
 import type { MarketOption } from "@/features/markets/types";
+import { AccountMenu, type HeaderAccount } from "@/features/account/ui/AccountMenu";
 import { HeaderShopButtons } from "@/features/cart/HeaderShopButtons";
 import { DepartmentsMenu } from "./DepartmentsMenu";
+import { HeaderSearch } from "./HeaderSearch";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 import { MarketSwitcher } from "./MarketSwitcher";
@@ -15,13 +17,15 @@ interface SiteHeaderProps {
   departments: NavCategory[];
   markets: MarketOption[];
   market: string;
+  /** The signed-in customer (null = guest). */
+  account?: HeaderAccount | null;
 }
 
 /**
  * Slim desktop preferences strip (36px): market/currency at the start,
  * language and theme at the end. Scrolls away; the navigation stays.
  */
-export function UtilityBar({ markets, market }: Omit<SiteHeaderProps, "departments">) {
+export function UtilityBar({ markets, market }: Omit<SiteHeaderProps, "departments" | "account">) {
   return (
     <div className="hidden bg-utility lg:block">
       <Container className="flex h-9 items-center justify-between gap-4">
@@ -45,13 +49,14 @@ export function UtilityBar({ markets, market }: Omit<SiteHeaderProps, "departmen
  * many departments as fit; the rest live in the mega menu. Sticky, with a
  * soft shadow once content scrolls under it.
  *
- * Mobile/tablet (<1024px): menu · centered logo · market pill · cart.
+ * Mobile/tablet (<1024px): menu · centered logo · market pill · cart; the
+ * account entry lives in the menu drawer.
  */
-export function SiteHeader({ departments, markets, market }: SiteHeaderProps) {
+export function SiteHeader({ departments, markets, market, account = null }: SiteHeaderProps) {
   return (
     <StickyHeader>
       <Container className="grid h-[4.25rem] grid-cols-[auto_1fr_auto] items-center gap-3 lg:hidden">
-        <MobileMenu departments={departments} />
+        <MobileMenu departments={departments} account={account} />
         <Logo className="justify-self-center" />
         <div className="flex items-center gap-2">
           <MarketSwitcher markets={markets} current={market} trigger="pill" />
@@ -63,6 +68,8 @@ export function SiteHeader({ departments, markets, market }: SiteHeaderProps) {
         <Logo className="justify-self-start" />
         <PrimaryNav departments={departments} />
         <div className="flex items-center gap-2 justify-self-end">
+          <HeaderSearch />
+          <AccountMenu account={account} />
           <HeaderShopButtons />
           {departments.length ? <DepartmentsMenu departments={departments} /> : null}
         </div>

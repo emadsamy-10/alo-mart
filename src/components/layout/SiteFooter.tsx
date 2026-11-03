@@ -3,17 +3,20 @@ import { Container } from "@/components/shared/Container";
 import { currencyName } from "@/lib/i18n/format";
 import { Link } from "@/lib/i18n/navigation";
 import type { MarketOption } from "@/features/markets/types";
+import { getSupportEmail } from "@/features/settings/api";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 import type { NavCategory } from "./nav-types";
 
 /**
  * Navy footer (approved design) with only facts we have: the brand, real
- * department and category links, the current market, and language. No
+ * department and category links, shop/account links, the support email the
+ * platform publishes (`/settings`), the current market, and language. No
  * invented addresses, policies, newsletter, app badges or social accounts.
  */
 export async function SiteFooter({ departments, market }: { departments: NavCategory[]; market: MarketOption | null }) {
   const [t, tp, locale] = await Promise.all([getTranslations("Footer"), getTranslations("Preferences"), getLocale()]);
+  const supportEmail = await getSupportEmail(locale);
   const year = new Date().getFullYear();
   const popular = departments.flatMap((d) => d.children).slice(0, 8);
 
@@ -67,9 +70,46 @@ export async function SiteFooter({ departments, market }: { departments: NavCate
           </nav>
         ) : null}
 
-        <div>
-          <h2 className={headingClass}>{tp("language")}</h2>
-          <LanguageSwitcher variant="list" tone="footer" />
+        <div className="space-y-8">
+          <nav aria-labelledby="footer-shop">
+            <h2 id="footer-shop" className={headingClass}>
+              {t("shop")}
+            </h2>
+            <ul>
+              <li>
+                <Link href="/products" className={linkClass}>
+                  {t("allProducts")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/stores" className={linkClass}>
+                  {t("stores")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/account" className={linkClass}>
+                  {t("account")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/account/orders" className={linkClass}>
+                  {t("orders")}
+                </Link>
+              </li>
+            </ul>
+          </nav>
+          {supportEmail ? (
+            <div>
+              <h2 className={headingClass}>{t("support")}</h2>
+              <a href={`mailto:${supportEmail}`} className={linkClass} data-testid="footer-support-email">
+                {supportEmail}
+              </a>
+            </div>
+          ) : null}
+          <div>
+            <h2 className={headingClass}>{tp("language")}</h2>
+            <LanguageSwitcher variant="list" tone="footer" />
+          </div>
         </div>
       </Container>
       <div className="border-t border-footer-border">

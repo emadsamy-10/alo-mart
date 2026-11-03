@@ -93,7 +93,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * option, description, specifications, breadcrumbs, related products,
  * JSON-LD); the gallery and the purchase panel are the only client islands.
  */
-export default async function ProductPage({ params }: Props) {
+/** `?variant=<id>` from a filtered listing card — honoured only when it is one of this product's variants. */
+function preselectedVariant(product: ProductDetail, raw: string | string[] | undefined): number | null {
+  const value = Number.parseInt(Array.isArray(raw) ? (raw[0] ?? "") : (raw ?? ""), 10);
+  return Number.isFinite(value) && product.variants.some((v) => v.id === value) ? value : null;
+}
+
+export default async function ProductPage({ params, searchParams }: Props) {
   const { locale, slug } = (await params) as { locale: Locale; slug: string };
   setRequestLocale(locale);
   const { market, result } = await load(locale, slug);
@@ -112,6 +118,7 @@ export default async function ProductPage({ params }: Props) {
   ]);
 
   const purchasable = toPurchasable(product);
+  const initialVariantId = preselectedVariant(product, (await searchParams).variant);
   const price = priceViewFromDetail(product);
   const trail = product.category?.path ?? [];
   const url = localizedUrl(seoConfig.siteUrl, locale, `/products/${product.slug}`);
@@ -161,7 +168,7 @@ export default async function ProductPage({ params }: Props) {
         />
       </Container>
 
-      <ProductSelectionProvider product={purchasable}>
+      <ProductSelectionProvider product={purchasable} initialVariantId={initialVariantId}>
         <Container className="grid gap-8 pt-5 pb-6 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,1fr)] lg:gap-14 xl:gap-16">
           <section aria-label={t("details")} className="min-w-0 lg:sticky lg:top-[calc(var(--header-height)+1.25rem)] lg:self-start">
             <SelectedGallery />
@@ -177,7 +184,9 @@ export default async function ProductPage({ params }: Props) {
             {product.store ? (
               <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Store className="size-4" aria-hidden />
-                {t("soldBy", { store: product.store.name })}
+                <Link href={`/stores/${product.store.slug}`} className="font-medium hover:text-brand-text hover:underline">
+                  {t("soldBy", { store: product.store.name })}
+                </Link>
               </p>
             ) : null}
 
@@ -194,7 +203,11 @@ export default async function ProductPage({ params }: Props) {
                   <h2 id="product-store" className="text-xs font-semibold text-muted-foreground">
                     {t("soldByHeading")}
                   </h2>
-                  <p className="mt-0.5 text-base font-bold">{product.store.name}</p>
+                  <p className="mt-0.5 text-base font-bold">
+                    <Link href={`/stores/${product.store.slug}`} className="hover:text-brand-text hover:underline">
+                      {product.store.name}
+                    </Link>
+                  </p>
                   {product.store.description ? <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{product.store.description}</p> : null}
                 </div>
               </section>

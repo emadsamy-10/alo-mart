@@ -1,8 +1,8 @@
 import "server-only";
 import { cache } from "react";
 import { z } from "zod";
-import { apiGet } from "@/lib/api/client";
-import { lenientArray } from "@/lib/api/schemas";
+import { apiGet, type QueryValue } from "@/lib/api/client";
+import { decimalSchema, lenientArray, paginationMetaSchema, productCardSchema } from "@/lib/api/schemas";
 
 export interface CategoryNode {
   id: number;
@@ -108,4 +108,93 @@ export const getStores = cache(async (locale: string) =>
     revalidate: 600,
     tags: ["stores"],
   }),
+);
+
+const storeDetailSchema = storeSchema.extend({
+  description: z.string().nullable().optional().transform((v) => v ?? null),
+  cover_image: z.string().nullable().optional().transform((v) => v ?? null),
+  contact_email: z.string().nullable().optional().transform((v) => v ?? null),
+  contact_phone: z.string().nullable().optional().transform((v) => v ?? null),
+  website: z.string().nullable().optional().transform((v) => v ?? null),
+  /** The merchant's own active policies (shipping, returns…), bilingual from the API. */
+  policies: lenientArray(z.object({ code: z.string(), title: z.string().nullable(), content: z.string().nullable() }))
+    .optional()
+    .transform((v) => v ?? []),
+});
+export type StoreDetail = z.output<typeof storeDetailSchema>;
+
+/** A public store (404 when the store isn't public). */
+export const getStore = cache(async (locale: string, slug: string) =>
+  apiGet(`stores/${encodeURIComponent(slug)}`, storeDetailSchema, { locale, revalidate: 600, tags: ["stores"] }),
+);
+
+// ── Advanced catalog: listing + facets (docs/catalog-filtering-api.md) ─────
+
+/** Prices, stock and counts move: same freshness as the product list. */
+const CATALOG_REVALIDATE = 30;
+
+const catalogListingSchema = z.object({
+  items: lenientArray(productCardSchema),
+  meta: paginationMetaSchema,
+});
+export type CatalogListing = z.output<typeof catalogListingSchema>;
+
+/** GET /products with the full filter set. `query` comes from listingQuery(). */
+export const getCatalogListing = cache(async (locale: string, query: Record<string, QueryValue>) =>
+  apiGet("products", catalogListingSchema, { locale, query, revalidate: CATALOG_REVALIDATE, tags: ["products"] }),
+);
+
+const countSchema = z.number().int().nonnegative();
+
+const facetCategorySchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  parent_id: z.number().nullable().optional(),
+  level: z.number().optional(),
+  count: countSchema,
+});
+
+const facetRefSchema = z.object({ id: z.number(), name: z.string(), slug: z.string(), count: countSchema });
+
+const facetValueSchema = z.object({
+  id: z.number(),
+  code: z.string(),
+  name: z.string(),
+  display_value: z.string().nullable().optional().transform((v) => v ?? null),
+  count: countSchema,
+});
+
+const facetAttributeSchema = z.object({
+  id: z.number(),
+  code: z.string(),
+  name: z.string(),
+  input_type: z.string().default("select"),
+  is_variant: z.boolean().optional(),
+  values: lenientArray(facetValueSchema),
+});
+export type FacetAttribute = z.output<typeof facetAttributeSchema>;
+export type FacetValue = z.output<typeof facetValueSchema>;
+
+const facetsSchema = z.object({
+  total: countSchema,
+  price: z
+    .object({ min: decimalSchema.nullable(), max: decimalSchema.nullable() })
+    .nullable()
+    .optional()
+    .transform((p) => ({ min: p?.min ?? null, max: p?.max ?? null })),
+  categories: lenientArray(facetCategorySchema).optional().default([]),
+  brands: lenientArray(facetRefSchema).optional().default([]),
+  stores: lenientArray(facetRefSchema).optional().default([]),
+  attributes: lenientArray(facetAttributeSchema).optional().default([]),
+});
+export type CatalogFacets = z.output<typeof facetsSchema>;
+
+/**
+ * GET /products/facets — catalog-wide counts with drill-down self-exclusion,
+ * and price bounds that (on the current backend) ignore the selected price
+ * range. `query` comes from facetsQuery(); it never carries sort or paging.
+ */
+export const getCatalogFacets = cache(async (locale: string, query: Record<string, QueryValue>) =>
+  apiGet("products/facets", facetsSchema, { locale, query, revalidate: CATALOG_REVALIDATE, tags: ["products"] }),
 );

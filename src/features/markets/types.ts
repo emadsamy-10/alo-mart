@@ -6,4 +6,6 @@ export interface MarketOption {
   name: string;
   currencyCode: string;
   currencySymbol: string | null;
+  /** Fraction digits of the market currency (EGP 2, KWD 3, JPY 0). */
+  currencyDecimals: number;
 }

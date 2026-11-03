@@ -12,6 +12,7 @@ describe("priceViewFromCard", () => {
       maxAmount: null,
       regularAmount: null,
       discountPercent: null,
+      matched: false,
     });
   });
 

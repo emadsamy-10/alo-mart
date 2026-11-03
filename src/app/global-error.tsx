@@ -3,7 +3,7 @@
 import "./globals.css";
 
 /** Last-resort boundary when the root layout itself fails. Kept dependency-free. */
-export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function GlobalError({ retry }: { error: Error & { digest?: string }; retry: () => void }) {
   return (
     <html lang="en">
       <body className="grid min-h-dvh place-items-center bg-background p-6 text-center text-foreground">
@@ -14,7 +14,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
           </p>
           <button
             type="button"
-            onClick={reset}
+            onClick={() => retry()}
             className="mt-8 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-ink-foreground"
           >
             Try again · حاول مجددًا

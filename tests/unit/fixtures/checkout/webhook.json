@@ -1,0 +1,9 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Webhook accepted",
+  "data": {
+    "result": "captured",
+    "replayed": false
+  }
+}

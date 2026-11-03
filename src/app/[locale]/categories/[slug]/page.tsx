@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PackageOpen } from "lucide-react";
+import { PackageOpen, SlidersHorizontal } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AppImage } from "@/components/shared/AppImage";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
@@ -27,7 +27,7 @@ async function load(locale: Locale, slug: string, page: number) {
   if (!tree.ok) return { market, tree, location: null, products: null } as const;
   const location = findCategory(tree.data, slug);
   if (!location) return { market, tree, location: null, products: null } as const;
-  const products = await getProducts(locale, market.code, { categoryId: location.node.id, page });
+  const products = await getProducts(locale, market.code, { categoryId: location.node.id, includeDescendants: true, page });
   return { market, tree, location, products } as const;
 }
 
@@ -53,9 +53,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 }
 
 /**
- * Minimal category landing page (Phase 1): sub-category navigation from the
- * real tree + products listed in this exact category. The API filters by
- * exact category, so parent departments say so instead of looking empty.
+ * Category landing page (indexable): sub-category navigation from the real
+ * tree + every product in the category and its sub-categories. Filtering and
+ * sorting happen on /products, linked with this category preselected.
  */
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { locale, slug } = (await params) as { locale: Locale; slug: string };
@@ -127,12 +127,19 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         </h2>
         {items.length ? (
           <>
-            {node.children.length ? <p className="mb-5 text-sm text-muted-foreground">{t("directOnly", { name: node.name })}</p> : null}
+            <div className="mb-5 flex justify-end">
+              <Link
+                href={node.children.length ? `/products?category=${node.slug}&descendants=1` : `/products?category=${node.slug}`}
+                className="inline-flex h-11 items-center gap-2 rounded-full border border-border-strong bg-surface px-4 text-sm font-bold shadow-sm transition hover:border-ink"
+                data-testid="category-filter-link"
+              >
+                <SlidersHorizontal className="size-4" aria-hidden />
+                {t("filterAndSort")}
+              </Link>
+            </div>
             <ProductGrid products={items} />
             {meta ? <Pagination path={`/categories/${node.slug}`} page={meta.current_page} lastPage={meta.last_page} /> : null}
           </>
-        ) : node.children.length ? (
-          <p className="rounded-card bg-surface-muted px-5 py-4 text-sm text-muted-foreground">{t("emptyDirect", { name: node.name })}</p>
         ) : (
           <StatusPanel icon={<PackageOpen className="size-6" />} title={t("empty", { name: node.name })} body={t("emptyHint")} />
         )}

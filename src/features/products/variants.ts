@@ -105,9 +105,14 @@ export function selectValue(variants: VariantLike[], axes: VariantAxis[], select
   return next;
 }
 
-/** Start on the first in-stock variant (else the first one) so the page opens purchasable. */
-export function initialSelection(variants: VariantLike[]): Selection {
-  const start = variants.find((v) => v.is_in_stock) ?? variants[0];
+/**
+ * Start on the preferred variant when it belongs to this product (the variant
+ * a filtered listing matched), else the first in-stock variant (else the
+ * first one) so the page opens purchasable.
+ */
+export function initialSelection(variants: VariantLike[], preferredId?: number | null): Selection {
+  const preferred = preferredId == null ? undefined : variants.find((v) => v.id === preferredId);
+  const start = preferred ?? variants.find((v) => v.is_in_stock) ?? variants[0];
   const selection: Selection = {};
   for (const o of start?.options ?? []) selection[o.attribute.id] = o.value.id;
   return selection;

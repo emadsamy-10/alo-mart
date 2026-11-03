@@ -1,9 +1,10 @@
 "use client";
 
-import { AlertTriangle, Minus, Plus, Trash2 } from "lucide-react";
+import { AlertTriangle, Lock, Minus, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useTransition } from "react";
 import { AppImage } from "@/components/shared/AppImage";
+import { buttonClass } from "@/components/ui/button";
 import { formatMoney } from "@/lib/i18n/format";
 import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils/cn";
@@ -111,7 +112,7 @@ export function CartLineItem({ line, onNavigate, compact = false }: { line: Cart
   );
 }
 
-export function CartSummary({ className }: { className?: string }) {
+export function CartSummary({ className, onNavigate }: { className?: string; onNavigate?: () => void }) {
   const t = useTranslations("Cart");
   const locale = useLocale();
   const { subtotal: sub, count } = useCart();
@@ -125,6 +126,11 @@ export function CartSummary({ className }: { className?: string }) {
         </p>
       </div>
       <p className="text-xs leading-relaxed text-muted-foreground">{t("checkoutNote")}</p>
+      {/* Checkout re-prices everything on the server; guests sign in first (their cart comes along). */}
+      <Link href="/checkout" onClick={onNavigate} className={buttonClass({ variant: "brand", size: "lg" }, "w-full")} data-testid="proceed-to-checkout">
+        <Lock className="size-4" aria-hidden />
+        {t("checkout")}
+      </Link>
     </div>
   );
 }

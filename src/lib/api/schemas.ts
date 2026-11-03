@@ -80,6 +80,23 @@ export const productCardSchema = z.object({
   has_price_range: z.boolean().default(false),
   published_at: nullableString,
   is_in_stock: z.boolean(),
+  /**
+   * Catalog listing only, and only when a variant-selecting filter applies to
+   * THIS product (price range, in_stock, on_sale, or a variant-dimension
+   * attribute in the product's own category): the cheapest live variant that
+   * satisfies every variant-level filter. Absent otherwise — never assume it.
+   */
+  matched_variant: z
+    .object({
+      id: z.number(),
+      price: decimalSchema.nullable(),
+      sale_price: decimalSchema.nullable(),
+      selling_price: decimalSchema,
+      is_in_stock: z.boolean(),
+    })
+    .nullable()
+    .optional()
+    .catch(null),
   /** Only present on `deals` homepage sections — the real reduced price. */
   deal: z
     .object({

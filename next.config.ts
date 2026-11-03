@@ -32,10 +32,20 @@ function imageRemotePatterns(): RemotePattern[] {
 
 const indexable = process.env.SITE_INDEXABLE === "true";
 
+/**
+ * Next 16 refuses to optimise images whose host resolves to a private/loopback
+ * IP. That is only ever true for a developer running the Laravel API locally
+ * (ALO_API_BASE_URL=http://127.0.0.1:8098/api/v1); staging and production API
+ * hosts keep the default. remotePatterns still limits optimisation to the API
+ * host's /storage path, so this does not open the optimiser to other hosts.
+ */
+const localApi = ["localhost", "127.0.0.1", "[::1]"].includes(new URL(apiBaseUrl).hostname);
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     remotePatterns: imageRemotePatterns(),
+    dangerouslyAllowLocalIP: localApi,
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85],
     // Widest slot is the product page image (~700 CSS px → 1400 @2x); fewer

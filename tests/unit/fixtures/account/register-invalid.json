@@ -1,0 +1,21 @@
+{
+  "http": 422,
+  "status": false,
+  "message": "The name field is required. (and 4 more errors)",
+  "data": null,
+  "errors": {
+    "name": [
+      "The name field is required."
+    ],
+    "email": [
+      "The email field must be a valid email address."
+    ],
+    "phone": [
+      "The phone field is required."
+    ],
+    "password": [
+      "The password field must be at least 8 characters.",
+      "The password field confirmation does not match."
+    ]
+  }
+}

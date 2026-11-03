@@ -26,7 +26,7 @@ function flatten(nodes: CategoryNode[]): CategoryNode[] {
 
 /**
  * Sitemap foundation over pages that exist today, for the DEFAULT market
- * (what crawlers see): homepage, categories, brands with products, products.
+ * (what crawlers see): homepage, categories, brands and stores with products, products.
  * Each URL lists its hreflang alternates.
  *
  * A failed API read THROWS instead of omitting that group: this route is
@@ -47,11 +47,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entries.push(entry(`/categories/${category.slug}`, { changeFrequency: "daily", priority: 0.7 }));
   }
 
-  const products: { slug: string; brandSlug: string | null }[] = [];
+  const products: { slug: string; brandSlug: string | null; storeSlug: string | null }[] = [];
   for (let page = 1; page <= MAX_PRODUCT_PAGES; page++) {
     const result = await getProducts(defaultLocale, market, { page, perPage: 100 });
     if (!result.ok) throw new CatalogUnavailableError(result.error.kind);
-    for (const item of result.data.items) products.push({ slug: item.slug, brandSlug: item.brand?.slug ?? null });
+    for (const item of result.data.items) products.push({ slug: item.slug, brandSlug: item.brand?.slug ?? null, storeSlug: item.store?.slug ?? null });
     if (page >= result.data.meta.last_page) break;
   }
   for (const product of products) {
@@ -65,6 +65,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const brand of brands.data) {
     if (withProducts.has(brand.slug)) entries.push(entry(`/brands/${brand.slug}`, { changeFrequency: "weekly", priority: 0.5 }));
   }
+
+  // Stores: the directory, plus each store that has products in this market.
+  entries.push(entry("/stores", { changeFrequency: "weekly", priority: 0.5 }));
+  const storesWithProducts = new Set(products.map((p) => p.storeSlug).filter(Boolean));
+  for (const slug of storesWithProducts) entries.push(entry(`/stores/${slug}`, { changeFrequency: "weekly", priority: 0.5 }));
 
   return entries;
 }

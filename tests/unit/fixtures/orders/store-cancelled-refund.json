@@ -1,0 +1,208 @@
+{
+  "status": true,
+  "message": "Success",
+  "data": {
+    "id": "5a1a6b90-15fc-4c37-a4f9-894ad640430f",
+    "order_number": "AM-261030-4VMNJF",
+    "status": "cancelled",
+    "payment_status": "paid",
+    "placed_at": "2026-10-30T14:58:05+00:00",
+    "market": {
+      "id": 1,
+      "code": "EG"
+    },
+    "currency": {
+      "id": 1,
+      "code": "EGP",
+      "decimal_places": 2
+    },
+    "store_count": 1,
+    "item_count": 1,
+    "quantity_count": 1,
+    "totals": {
+      "merchandise_net": "393.86",
+      "merchandise_tax": "55.14",
+      "merchandise_gross": "449.00",
+      "shipping_net": "43.86",
+      "shipping_tax": "6.14",
+      "shipping_gross": "50.00",
+      "tax_total": "61.28",
+      "grand_total": "499.00"
+    },
+    "payment_due_at": "2026-10-30T15:58:05+00:00",
+    "payment_expired": false,
+    "confirmed_at": "2026-10-30T14:58:07+00:00",
+    "cancelled_at": "2026-10-30T14:58:09+00:00",
+    "cancellation_reason": "merchant_cancelled",
+    "refund_status": "pending_manual_review",
+    "can_cancel": false,
+    "tax": {
+      "code": "EG_VAT",
+      "name": "VAT",
+      "rate_percent": "14.000",
+      "price_includes_tax": true,
+      "shipping_taxable": true
+    },
+    "delivery_address": {
+      "label": "Home",
+      "recipient_name": "Hana Mostafa",
+      "recipient_phone": "01055556666",
+      "country": {
+        "id": 1,
+        "name": "Egypt",
+        "code": "EG"
+      },
+      "region": {
+        "id": 1,
+        "name": "Cairo"
+      },
+      "city": {
+        "id": 1,
+        "name": "Nasr City"
+      },
+      "address_line_1": "3 Salah Salem Rd",
+      "address_line_2": null,
+      "building": null,
+      "floor": null,
+      "unit": null,
+      "postal_code": null,
+      "delivery_instructions": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "stores": [
+      {
+        "id": "7bf90739-5012-4b67-8057-4b8417022875",
+        "sequence": 1,
+        "status": "cancelled",
+        "store": {
+          "id": 3,
+          "name": "Mada Lifestyle",
+          "slug": "mada-lifestyle"
+        },
+        "shipping": {
+          "shipping_method_id": 2,
+          "name": "Standard delivery",
+          "fee": "50.00",
+          "is_free_shipping": false,
+          "delivery_estimate": {
+            "min_days": 2,
+            "max_days": 5
+          }
+        },
+        "item_count": 1,
+        "quantity_count": 1,
+        "totals": {
+          "merchandise_net": "393.86",
+          "merchandise_tax": "55.14",
+          "merchandise_gross": "449.00",
+          "shipping_net": "43.86",
+          "shipping_tax": "6.14",
+          "shipping_gross": "50.00",
+          "tax_total": "61.28",
+          "grand_total": "499.00"
+        },
+        "status_timestamps": {
+          "confirmed_at": "2026-10-30T14:58:07+00:00",
+          "processing_at": null,
+          "shipped_at": null,
+          "delivered_at": null,
+          "cancelled_at": "2026-10-30T14:58:09+00:00"
+        },
+        "cancellation_reason": "merchant_cancelled",
+        "refund": {
+          "status": "pending_manual_review",
+          "amount": "499.00"
+        },
+        "items": [
+          {
+            "id": 44,
+            "product": {
+              "id": 41,
+              "name": "Cotton Lane Essential Crew-Neck T-Shirt",
+              "slug": "cotton-lane-essential-crew-neck-t-shirt"
+            },
+            "variant": {
+              "id": 49,
+              "sku": "CL-ESS-TEE-WHT-L",
+              "options": [
+                {
+                  "attribute": {
+                    "id": 1,
+                    "code": "color",
+                    "name": "Color"
+                  },
+                  "value": {
+                    "id": 2,
+                    "code": "white",
+                    "name": "White",
+                    "display_value": "#F5F5F2"
+                  }
+                },
+                {
+                  "attribute": {
+                    "id": 3,
+                    "code": "apparel-size",
+                    "name": "Size"
+                  },
+                  "value": {
+                    "id": 20,
+                    "code": "l",
+                    "name": "L",
+                    "display_value": null
+                  }
+                }
+              ]
+            },
+            "quantity": 1,
+            "unit_list_price": "449.0000",
+            "unit_sale_price": null,
+            "unit_price": "449.0000",
+            "line_subtotal": "449.00",
+            "line_net": "393.86",
+            "line_tax": "55.14",
+            "line_gross": "449.00"
+          }
+        ]
+      }
+    ],
+    "timeline": [
+      {
+        "event": "status_changed",
+        "store_order_id": "7bf90739-5012-4b67-8057-4b8417022875",
+        "from_status": "placed",
+        "to_status": "confirmed",
+        "reason": null,
+        "actor": "system",
+        "at": "2026-10-30T14:58:07+00:00"
+      },
+      {
+        "event": "payment_captured",
+        "store_order_id": null,
+        "from_status": "placed",
+        "to_status": "confirmed",
+        "reason": null,
+        "actor": "system",
+        "at": "2026-10-30T14:58:07+00:00"
+      },
+      {
+        "event": "status_changed",
+        "store_order_id": "7bf90739-5012-4b67-8057-4b8417022875",
+        "from_status": "confirmed",
+        "to_status": "cancelled",
+        "reason": "merchant_cancelled",
+        "actor": "store",
+        "at": "2026-10-30T14:58:09+00:00"
+      },
+      {
+        "event": "cancelled",
+        "store_order_id": null,
+        "from_status": "confirmed",
+        "to_status": "cancelled",
+        "reason": "merchant_cancelled",
+        "actor": "store",
+        "at": "2026-10-30T14:58:09+00:00"
+      }
+    ]
+  }
+}

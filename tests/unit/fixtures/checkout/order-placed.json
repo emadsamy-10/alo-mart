@@ -1,0 +1,200 @@
+{
+  "http": 201,
+  "status": true,
+  "message": "Order placed",
+  "data": {
+    "id": "a820df7b-f3af-4dfc-8e08-458513e607df",
+    "order_number": "AM-261028-KBEPWE",
+    "status": "placed",
+    "payment_status": "unpaid",
+    "placed_at": "2026-10-28T17:13:23+00:00",
+    "market": {
+      "id": 1,
+      "code": "EG"
+    },
+    "currency": {
+      "id": 1,
+      "code": "EGP",
+      "decimal_places": 2
+    },
+    "store_count": 1,
+    "item_count": 2,
+    "quantity_count": 2,
+    "totals": {
+      "merchandise_net": "2578.07",
+      "merchandise_tax": "360.93",
+      "merchandise_gross": "2939.00",
+      "shipping_net": "0.00",
+      "shipping_tax": "0.00",
+      "shipping_gross": "0.00",
+      "tax_total": "360.93",
+      "grand_total": "2939.00"
+    },
+    "tax": {
+      "code": "EG_VAT",
+      "name": "VAT",
+      "rate_percent": "14.000",
+      "price_includes_tax": true,
+      "shipping_taxable": true
+    },
+    "delivery_address": {
+      "label": null,
+      "recipient_name": "Checkout Probe",
+      "recipient_phone": "01000000000",
+      "country": {
+        "id": 1,
+        "name": "Egypt",
+        "code": "EG"
+      },
+      "region": {
+        "id": 1,
+        "name": "Cairo"
+      },
+      "city": {
+        "id": 1,
+        "name": "Nasr City"
+      },
+      "address_line_1": "1 Probe St",
+      "address_line_2": null,
+      "building": null,
+      "floor": null,
+      "unit": null,
+      "postal_code": null,
+      "delivery_instructions": null,
+      "latitude": null,
+      "longitude": null
+    },
+    "stores": [
+      {
+        "id": "74105549-c417-443a-b1b4-72ce5bffc24a",
+        "sequence": 1,
+        "status": "placed",
+        "store": {
+          "id": 3,
+          "name": "Mada Lifestyle",
+          "slug": "mada-lifestyle"
+        },
+        "shipping": {
+          "shipping_method_id": 2,
+          "name": "Standard delivery",
+          "fee": "0.00",
+          "is_free_shipping": true,
+          "delivery_estimate": {
+            "min_days": 2,
+            "max_days": 5
+          }
+        },
+        "item_count": 2,
+        "quantity_count": 2,
+        "totals": {
+          "merchandise_net": "2578.07",
+          "merchandise_tax": "360.93",
+          "merchandise_gross": "2939.00",
+          "shipping_net": "0.00",
+          "shipping_tax": "0.00",
+          "shipping_gross": "0.00",
+          "tax_total": "360.93",
+          "grand_total": "2939.00"
+        },
+        "items": [
+          {
+            "id": 19,
+            "product": {
+              "id": 41,
+              "name": "Cotton Lane Essential Crew-Neck T-Shirt",
+              "slug": "cotton-lane-essential-crew-neck-t-shirt"
+            },
+            "variant": {
+              "id": 49,
+              "sku": "CL-ESS-TEE-WHT-L",
+              "options": [
+                {
+                  "attribute": {
+                    "id": 1,
+                    "code": "color",
+                    "name": "Color"
+                  },
+                  "value": {
+                    "id": 2,
+                    "code": "white",
+                    "name": "White",
+                    "display_value": "#F5F5F2"
+                  }
+                },
+                {
+                  "attribute": {
+                    "id": 3,
+                    "code": "apparel-size",
+                    "name": "Size"
+                  },
+                  "value": {
+                    "id": 20,
+                    "code": "l",
+                    "name": "L",
+                    "display_value": null
+                  }
+                }
+              ]
+            },
+            "quantity": 1,
+            "unit_list_price": "449.0000",
+            "unit_sale_price": null,
+            "unit_price": "449.0000",
+            "line_subtotal": "449.00",
+            "line_net": "393.86",
+            "line_tax": "55.14",
+            "line_gross": "449.00"
+          },
+          {
+            "id": 20,
+            "product": {
+              "id": 42,
+              "name": "Atlas Wear Quilted Puffer Jacket",
+              "slug": "atlas-wear-quilted-puffer-jacket"
+            },
+            "variant": {
+              "id": 55,
+              "sku": "AW-PUFFER-TRQ-S",
+              "options": [
+                {
+                  "attribute": {
+                    "id": 1,
+                    "code": "color",
+                    "name": "Color"
+                  },
+                  "value": {
+                    "id": 10,
+                    "code": "turquoise",
+                    "name": "Turquoise",
+                    "display_value": "#5CC8C2"
+                  }
+                },
+                {
+                  "attribute": {
+                    "id": 3,
+                    "code": "apparel-size",
+                    "name": "Size"
+                  },
+                  "value": {
+                    "id": 18,
+                    "code": "s",
+                    "name": "S",
+                    "display_value": null
+                  }
+                }
+              ]
+            },
+            "quantity": 1,
+            "unit_list_price": "2950.0000",
+            "unit_sale_price": "2490.0000",
+            "unit_price": "2490.0000",
+            "line_subtotal": "2490.00",
+            "line_net": "2184.21",
+            "line_tax": "305.79",
+            "line_gross": "2490.00"
+          }
+        ]
+      }
+    ]
+  }
+}

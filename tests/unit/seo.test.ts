@@ -93,10 +93,16 @@ describe("JSON-LD", () => {
     expect((data.itemListElement as { position: number }[]).map((i) => i.position)).toEqual([1, 2]);
   });
 
-  it("does not advertise a search action (no search API yet)", () => {
+  it("advertises the real catalog search, and nothing without a search URL", () => {
     expect(websiteJsonLd({ siteUrl: prod.siteUrl, name: "ALO MART", url: prod.siteUrl + "/en", locale: "en" })).not.toHaveProperty(
       "potentialAction",
     );
+    const site = websiteJsonLd({ siteUrl: prod.siteUrl, name: "ALO MART", url: prod.siteUrl + "/en", locale: "en", searchUrl: prod.siteUrl + "/en/products" });
+    expect(site.potentialAction).toEqual({
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${prod.siteUrl}/en/products?q={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    });
   });
 
   it("escapes </script> breakouts", () => {

@@ -1,0 +1,236 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Checkout quote calculated",
+  "data": {
+    "market": {
+      "id": 1,
+      "code": "EG"
+    },
+    "currency": {
+      "code": "EGP",
+      "symbol": "ج.م",
+      "decimal_places": 2
+    },
+    "address": {
+      "id": 58,
+      "label": null,
+      "recipient_name": "Checkout Probe",
+      "recipient_phone": "01000000000",
+      "country": {
+        "id": 1,
+        "name": "Egypt",
+        "is_active": true,
+        "code": "EG"
+      },
+      "region": {
+        "id": 1,
+        "name": "Cairo",
+        "is_active": true
+      },
+      "city": {
+        "id": 1,
+        "name": "Nasr City",
+        "is_active": true
+      },
+      "address_line_1": "1 Probe St",
+      "address_line_2": null,
+      "building": null,
+      "floor": null,
+      "unit": null,
+      "postal_code": null,
+      "delivery_instructions": null
+    },
+    "stores": [
+      {
+        "store": {
+          "id": 3,
+          "name": "Mada Lifestyle",
+          "slug": "mada-lifestyle"
+        },
+        "items": [
+          {
+            "id": 33,
+            "quantity": 1,
+            "product": {
+              "id": 41,
+              "name": "Cotton Lane Essential Crew-Neck T-Shirt",
+              "slug": "cotton-lane-essential-crew-neck-t-shirt",
+              "primary_image_url": "http://127.0.0.1:8098/storage/products/41/media/168a4dd0-b314-494a-b489-b860757e3e2b.webp"
+            },
+            "store": {
+              "id": 3,
+              "name": "Mada Lifestyle",
+              "slug": "mada-lifestyle"
+            },
+            "variant": {
+              "id": 49,
+              "sku": "CL-ESS-TEE-WHT-L",
+              "options": [
+                {
+                  "attribute": {
+                    "id": 1,
+                    "name": "Color",
+                    "code": "color"
+                  },
+                  "value": {
+                    "id": 2,
+                    "name": "White",
+                    "code": "white",
+                    "display_value": "#F5F5F2"
+                  }
+                },
+                {
+                  "attribute": {
+                    "id": 3,
+                    "name": "Size",
+                    "code": "apparel-size"
+                  },
+                  "value": {
+                    "id": 20,
+                    "name": "L",
+                    "code": "l",
+                    "display_value": null
+                  }
+                }
+              ]
+            },
+            "price": "449.0000",
+            "sale_price": null,
+            "unit_price": "449.0000",
+            "line_subtotal": "449.0000",
+            "is_available": true,
+            "unavailable_reason": null,
+            "is_in_stock": true,
+            "blockers": [],
+            "tax": {
+              "net": "393.86",
+              "tax": "55.14",
+              "gross": "449.00"
+            }
+          },
+          {
+            "id": 34,
+            "quantity": 1,
+            "product": {
+              "id": 42,
+              "name": "Atlas Wear Quilted Puffer Jacket",
+              "slug": "atlas-wear-quilted-puffer-jacket",
+              "primary_image_url": "http://127.0.0.1:8098/storage/products/42/media/8cd2efdf-4f6b-40e2-8249-d56afffb613e.webp"
+            },
+            "store": {
+              "id": 3,
+              "name": "Mada Lifestyle",
+              "slug": "mada-lifestyle"
+            },
+            "variant": {
+              "id": 55,
+              "sku": "AW-PUFFER-TRQ-S",
+              "options": [
+                {
+                  "attribute": {
+                    "id": 1,
+                    "name": "Color",
+                    "code": "color"
+                  },
+                  "value": {
+                    "id": 10,
+                    "name": "Turquoise",
+                    "code": "turquoise",
+                    "display_value": "#5CC8C2"
+                  }
+                },
+                {
+                  "attribute": {
+                    "id": 3,
+                    "name": "Size",
+                    "code": "apparel-size"
+                  },
+                  "value": {
+                    "id": 18,
+                    "name": "S",
+                    "code": "s",
+                    "display_value": null
+                  }
+                }
+              ]
+            },
+            "price": "2950.0000",
+            "sale_price": "2490.0000",
+            "unit_price": "2490.0000",
+            "line_subtotal": "2490.0000",
+            "is_available": true,
+            "unavailable_reason": null,
+            "is_in_stock": true,
+            "blockers": [],
+            "tax": {
+              "net": "2184.21",
+              "tax": "305.79",
+              "gross": "2490.00"
+            }
+          }
+        ],
+        "item_count": 2,
+        "quantity_count": 2,
+        "commercial_subtotal": "2939.0000",
+        "shipment_weight_grams": 910,
+        "delivery": {
+          "status": "serviceable",
+          "level": "country"
+        },
+        "shipping_options": [
+          {
+            "shipping_method_id": 2,
+            "name": "Standard delivery",
+            "description": null,
+            "fee": "0.0000",
+            "is_free_shipping": true,
+            "delivery_estimate": {
+              "min_days": 2,
+              "max_days": 5
+            }
+          }
+        ],
+        "selected_shipping": null,
+        "shipping_fee": null,
+        "pre_tax_subtotal": null,
+        "merchandise_net": "2578.07",
+        "merchandise_tax": "360.93",
+        "merchandise_total": "2939.00",
+        "shipping_net": null,
+        "shipping_tax": null,
+        "tax_total": null,
+        "total": null,
+        "checkout_ready": false,
+        "blockers": [
+          {
+            "code": "shipping_method_required",
+            "message": "Please choose a shipping method for this store."
+          }
+        ]
+      }
+    ],
+    "item_count": 2,
+    "quantity_count": 2,
+    "commercial_subtotal": "2939.0000",
+    "shipping_total": null,
+    "pre_tax_total": null,
+    "tax": {
+      "code": "EG_VAT",
+      "name": "VAT",
+      "rate_percent": "14.000",
+      "price_includes_tax": true,
+      "shipping_taxable": true
+    },
+    "merchandise_net": "2578.07",
+    "merchandise_tax": "360.93",
+    "merchandise_total": "2939.00",
+    "shipping_tax": null,
+    "tax_total": null,
+    "grand_total": null,
+    "tax_calculated": false,
+    "checkout_ready": false,
+    "blockers": [],
+    "quoted_at": "2026-10-28T17:13:22+00:00"
+  }
+}

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { Providers } from "@/components/layout/Providers";
+import { AccountShopSync } from "@/features/account/AccountShopSync";
+import { getCurrentUser } from "@/features/account/session";
 import { CartDrawer } from "@/features/cart/CartDrawer";
 import { MarketProvider } from "@/features/markets/MarketContext";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -39,7 +41,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
 }
 
 /** Only these namespaces are used by client components; the rest stays on the server. */
-const CLIENT_NAMESPACES = ["Common", "Header", "Preferences", "Sections", "States", "Cart", "Wishlist", "Gallery", "Purchase", "Catalog"] as const;
+const CLIENT_NAMESPACES = ["Common", "Header", "Preferences", "Sections", "States", "Cart", "Wishlist", "Gallery", "Purchase", "Catalog", "Auth", "Account", "Checkout"] as const;
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -55,6 +57,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   const market = await resolveMarket(locale);
   const tree = await getCategoryTree(locale, market.code);
   const departments = tree.ok ? toNavCategories(tree.data) : [];
+  const current = await getCurrentUser(locale);
+  const account =
+    current.status === "signed_in"
+      ? { firstName: current.user.name.trim().split(/\s+/)[0] || current.user.name, verified: !!current.user.email_verified_at }
+      : null;
 
   return (
     <html
@@ -63,7 +70,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       className={cn(latinFont.variable, arabicFont.variable)}
       suppressHydrationWarning
     >
-      <body className="flex min-h-dvh flex-col">
+      <body className="flex min-h-dvh flex-col" data-account={current.status === "signed_in" ? "1" : "0"}>
         <NextIntlClientProvider messages={clientMessages}>
           <Providers>
            <MarketProvider market={market.code}>
@@ -74,12 +81,13 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
               {t("skipToContent")}
             </a>
             <UtilityBar markets={market.markets} market={market.code} />
-            <SiteHeader departments={departments} markets={market.markets} market={market.code} />
+            <SiteHeader departments={departments} markets={market.markets} market={market.code} account={account} />
             <main id="main" className="flex-1">
               {children}
             </main>
             <SiteFooter departments={departments} market={market.current} />
             <CartDrawer />
+            <AccountShopSync signedIn={current.status === "signed_in"} />
            </MarketProvider>
           </Providers>
         </NextIntlClientProvider>

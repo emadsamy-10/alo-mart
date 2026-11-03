@@ -1,0 +1,46 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Product saved to your wishlist",
+  "data": {
+    "market": {
+      "id": 1,
+      "code": "EG"
+    },
+    "currency": {
+      "code": "EGP",
+      "symbol": "ج.م",
+      "decimal_places": 2
+    },
+    "items": [
+      {
+        "id": 1,
+        "saved_at": "2026-10-27T07:33:22.000000Z",
+        "product": {
+          "id": 55,
+          "name": "Peak Form Aluminium Sports Bottle 750 ml",
+          "slug": "peak-form-aluminium-sports-bottle",
+          "primary_image_url": "http://127.0.0.1:8098/storage/products/55/media/43010fdb-4679-4f97-a1d4-7a0695fd4c8e.webp"
+        },
+        "brand": {
+          "id": 14,
+          "name": "Peak Form",
+          "slug": "peak-form"
+        },
+        "store": {
+          "id": 3,
+          "name": "Mada Lifestyle",
+          "slug": "mada-lifestyle"
+        },
+        "price_from": "395.0000",
+        "price_to": "395.0000",
+        "has_price_range": false,
+        "is_in_stock": true,
+        "is_available": true,
+        "unavailable_reason": null
+      }
+    ],
+    "items_count": 1,
+    "unavailable_items_count": 0
+  }
+}

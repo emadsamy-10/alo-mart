@@ -1,0 +1,14 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Success",
+  "data": {
+    "items": [],
+    "meta": {
+      "current_page": 1,
+      "last_page": 1,
+      "per_page": 20,
+      "total": 0
+    }
+  }
+}

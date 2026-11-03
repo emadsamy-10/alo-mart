@@ -19,7 +19,8 @@ src/
   features/
     homepage/                API, section model (pure, tested), SectionRenderer, Hero, sections/*
     products/                API, pricing view-model (pure, tested), ProductCard, ProductPrice, ProductGrid
-    catalog/                 categories tree, brands
+    catalog/                 categories tree, brands, stores; /products: URL state (filters.ts), API params
+                             (api-query.ts), facets view model, filter panel, search, sort, chips, pagination
     markets/                 markets API, market resolution, server action
   lib/
     api/                     client (fetch gateway), zod schemas
@@ -31,7 +32,9 @@ src/
 messages/{ar,en}.json        UI strings only (catalog text comes from the API)
 ```
 
-Server Components by default. Client islands: `AppImage` (error fallback), `Carousel` controls,
+Server Components by default. Client islands: the /products controls (`CatalogNavigationProvider`, search,
+sort, filter panel / sheet, chips, pagination — product cards inside them stay server-rendered),
+`AppImage` (error fallback), `Carousel` controls,
 `DepartmentsMenu`, `MobileMenu`, `MarketSwitcher`, `LanguageSwitcher`, `ThemeSwitcher`, `Providers`, `error.tsx`.
 Product cards, sections, hero, header and footer markup are server-rendered.
 
@@ -73,9 +76,9 @@ Product cards, sections, hero, header and footer markup are server-rendered.
   build time), and robots.txt disallows `/` (evaluated per request). Set the flag at build **and** runtime.
 - Thin-page policy: categories with no products and no sub-categories, brands without products → `noindex, follow`.
   Out-of-range `?page=` → 404. Pages > 1 self-canonicalize with `?page=N`.
-- Faceted filters (future): filter/sort query combinations must be `noindex, follow` with canonical to the
-  unfiltered listing; only curated facet landing pages should be indexable paths.
-- Structured data: Organization + WebSite (no `SearchAction` — no search API) on the homepage;
+- Faceted filters: any filter, search or sort on /products is `noindex, follow` with the canonical on the
+  unfiltered listing; category and brand pages are the indexable landing pages for those facets.
+- Structured data: Organization + WebSite with a `SearchAction` targeting `/products?q=` on the homepage;
   Product (Offer / AggregateOffer from real selling price, currency, availability, brand only when present,
   seller = store) + BreadcrumbList on product pages; BreadcrumbList on category/brand pages.
   No ratings/reviews. Rich-result eligibility has **not** been validated with Google's tool yet.
@@ -116,3 +119,20 @@ temporary, never as "not found" and never as indexable content:
 | Homepage | 200 with the shell (header/footer) and an in-page "couldn't load the catalog" panel — distinct from the empty-market state. |
 | Product / category / brand pages | `CatalogUnavailableError` → localized `error.tsx` with **HTTP 500**, so crawlers retry and keep the indexed page (a 200 would index an error message; a 404 would deindex a live product). Unknown slugs still 404. |
 | `sitemap.xml` (ISR) | A failed group throws, so a failed background regeneration keeps serving the **last good sitemap** instead of one without products. Consequence: `next build` fails if the API is down while prerendering — retry the build when the API is reachable rather than shipping a partial sitemap. |
+
+## Catalog (/products) — URL-driven, server-rendered
+
+- **The URL is the state.** `features/catalog/filters.ts` is the one typed parser/serializer (canonical key
+  order, repeated keys for lists, `attr.<code>=v1,v2`, unknown parameters preserved). Refresh, Back/Forward
+  and shared links restore everything; every change except paging returns to page 1.
+- **Server-first.** The page resolves slugs → ids, then fetches the listing and the facets **in parallel**
+  (`Promise.all`); cards, counts and pagination are in the initial HTML. No catalog data is fetched in the
+  browser and nothing is filtered client-side.
+- **Navigation.** `CatalogNavigationProvider` pushes the canonical URL inside one React transition;
+  `useOptimistic` keeps the in-flight state so quick successive clicks accumulate, and the App Router keeps
+  only the latest navigation, so a slow older response can never replace a newer one. While a navigation is
+  pending the grid is dimmed and `aria-busy`, and facet counts are hidden instead of showing stale numbers.
+- **Caching.** Listing and facets are cached 30 s per full URL (market and `Accept-Language` are part of
+  the key, so markets and locales never mix); categories/brands/stores 600 s.
+- **Mobile.** Filter and sort are bottom sheets; choices apply at once and the sheet stays open with a live
+  "Show N results" total.

@@ -1,0 +1,7 @@
+{
+  "http": 422,
+  "status": false,
+  "message": "This verification link is not valid.",
+  "data": null,
+  "code": "verification_invalid"
+}

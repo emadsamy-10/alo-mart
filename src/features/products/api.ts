@@ -25,6 +25,8 @@ export type ProductList = z.output<typeof productListSchema>;
 
 export interface ProductListFilters {
   categoryId?: number;
+  /** Also list products of every sub-category (API `include_descendants`). */
+  includeDescendants?: boolean;
   brandId?: number;
   storeId?: number;
   page?: number;
@@ -32,16 +34,18 @@ export interface ProductListFilters {
 }
 
 /**
- * GET /products — newest first. NOTE: the API filters by EXACT category_id
- * (no descendants), so a parent category lists only products assigned to it
- * directly. Callers must present that honestly.
+ * GET /products — newest first. `category_id` alone is an EXACT category;
+ * with `includeDescendants` the whole subtree is listed (array form, as the
+ * API requires for the new parameters).
  */
 export const getProducts = cache(async (locale: string, market: string, filters: ProductListFilters) =>
   apiGet("products", productListSchema, {
     locale,
     query: {
       market,
-      category_id: filters.categoryId,
+      ...(filters.includeDescendants && filters.categoryId
+        ? { "category_id[]": [filters.categoryId], include_descendants: 1 }
+        : { category_id: filters.categoryId }),
       brand_id: filters.brandId,
       store_id: filters.storeId,
       page: filters.page,

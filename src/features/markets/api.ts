@@ -49,6 +49,7 @@ export const getMarkets = cache(async (locale: string) => {
       name: regionName(m.code, locale) ?? m.name,
       currencyCode: m.currency.code,
       currencySymbol: m.currency.symbol ?? null,
+      currencyDecimals: Math.max(0, Math.min(4, m.currency.decimal_places)),
     }));
   return { ok: true as const, data: markets };
 });

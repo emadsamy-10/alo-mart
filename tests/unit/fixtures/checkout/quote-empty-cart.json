@@ -1,0 +1,73 @@
+{
+  "http": 200,
+  "status": true,
+  "message": "Checkout quote calculated",
+  "data": {
+    "market": {
+      "id": 1,
+      "code": "EG"
+    },
+    "currency": {
+      "code": "EGP",
+      "symbol": "ج.م",
+      "decimal_places": 2
+    },
+    "address": {
+      "id": 58,
+      "label": null,
+      "recipient_name": "Checkout Probe",
+      "recipient_phone": "01000000000",
+      "country": {
+        "id": 1,
+        "name": "Egypt",
+        "is_active": true,
+        "code": "EG"
+      },
+      "region": {
+        "id": 1,
+        "name": "Cairo",
+        "is_active": true
+      },
+      "city": {
+        "id": 1,
+        "name": "Nasr City",
+        "is_active": true
+      },
+      "address_line_1": "1 Probe St",
+      "address_line_2": null,
+      "building": null,
+      "floor": null,
+      "unit": null,
+      "postal_code": null,
+      "delivery_instructions": null
+    },
+    "stores": [],
+    "item_count": 0,
+    "quantity_count": 0,
+    "commercial_subtotal": "0.0000",
+    "shipping_total": null,
+    "pre_tax_total": null,
+    "tax": {
+      "code": "EG_VAT",
+      "name": "VAT",
+      "rate_percent": "14.000",
+      "price_includes_tax": true,
+      "shipping_taxable": true
+    },
+    "merchandise_net": null,
+    "merchandise_tax": null,
+    "merchandise_total": null,
+    "shipping_tax": null,
+    "tax_total": null,
+    "grand_total": null,
+    "tax_calculated": false,
+    "checkout_ready": false,
+    "blockers": [
+      {
+        "code": "empty_cart",
+        "message": "Your cart is empty."
+      }
+    ],
+    "quoted_at": "2026-10-28T17:13:21+00:00"
+  }
+}

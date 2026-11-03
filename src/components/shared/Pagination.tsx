@@ -2,6 +2,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils/cn";
+import { pageWindow } from "./page-window";
+
+export { pageWindow };
 
 interface PaginationProps {
   path: string;
@@ -9,18 +12,6 @@ interface PaginationProps {
   lastPage: number;
   /** Other query parameters to keep (e.g. active filters). Never include `page`. */
   query?: Record<string, string>;
-}
-
-/** Page numbers to show: first, last, and a window around the current page. */
-export function pageWindow(page: number, lastPage: number): (number | "gap")[] {
-  const pages = new Set([1, lastPage, page - 1, page, page + 1].filter((p) => p >= 1 && p <= lastPage));
-  const sorted = [...pages].sort((a, b) => a - b);
-  const out: (number | "gap")[] = [];
-  sorted.forEach((p, i) => {
-    if (i > 0 && p - sorted[i - 1] > 1) out.push("gap");
-    out.push(p);
-  });
-  return out;
 }
 
 /** Crawlable pagination links (?page=N, filters preserved). Page 1 is the bare URL. */

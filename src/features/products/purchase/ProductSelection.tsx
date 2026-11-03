@@ -31,9 +31,18 @@ const Ctx = createContext<SelectionContextValue | null>(null);
  * Holds the shopper's option choices for one product page. Gallery and
  * purchase panel read it; everything else on the page stays server-rendered.
  */
-export function ProductSelectionProvider({ product, children }: { product: PurchasableProduct; children: ReactNode }) {
+export function ProductSelectionProvider({
+  product,
+  initialVariantId = null,
+  children,
+}: {
+  product: PurchasableProduct;
+  /** Variant to open on (already validated against this product by the page); null = default. */
+  initialVariantId?: number | null;
+  children: ReactNode;
+}) {
   const axes = useMemo(() => variantAxes(product.variants), [product.variants]);
-  const [selection, setSelection] = useState<Selection>(() => initialSelection(product.variants));
+  const [selection, setSelection] = useState<Selection>(() => initialSelection(product.variants, initialVariantId));
 
   const value = useMemo<SelectionContextValue>(() => {
     const variant = findVariant(product.variants, axes, selection) as SelectionContextValue["variant"];
