@@ -34,6 +34,32 @@ function consoleErrors(page: Page) {
 }
 
 test.describe("product details", () => {
+  test("closing the cart drawer with Escape returns focus to the control that opened it", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "desktop", "keyboard flow on the desktop header");
+    await page.goto(`/en/products/${PRODUCT}?variant=49`);
+    const cartButton = page.locator("[data-testid=cart-button] >> visible=true");
+    await cartButton.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByTestId("cart-drawer")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("cart-drawer")).toBeHidden();
+    await expect(cartButton).toBeFocused();
+
+    const add = page.getByTestId("add-to-cart");
+    await add.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByTestId("cart-drawer")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(add).toBeFocused();
+  });
+
+  test("option groups are announced as 'Color: White', not 'ColorWhite'", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "desktop", "markup is the same on every layout");
+    await page.goto(`/en/products/${PRODUCT}?variant=49`);
+    await expect(page.getByRole("group", { name: "Color: White", exact: true })).toBeVisible();
+    await expect(page.getByRole("group", { name: "Size: L", exact: true })).toBeVisible();
+  });
+
   test("gallery: thumbnails, zoom viewer, keyboard, close restores focus", async ({ page, isMobile }) => {
     const errors = consoleErrors(page);
     await page.goto(`/en/products/${PRODUCT}`);

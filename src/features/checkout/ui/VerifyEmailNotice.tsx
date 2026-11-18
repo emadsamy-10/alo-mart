@@ -18,7 +18,8 @@ export function VerifyEmailNotice() {
         <h2 className="font-bold">{t("title")}</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">{t("body")}</p>
       </div>
-      <div className="sm:w-60">
+      {/* Sized by the button (its label is wider than 15rem in some languages), capped so feedback text wraps. */}
+      <div className="sm:max-w-72 sm:shrink-0">
         <ResendVerificationForm compact />
       </div>
     </section>

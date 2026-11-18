@@ -42,6 +42,16 @@ export function safeNext(value: unknown, fallback = FALLBACK): string {
   return result;
 }
 
+/**
+ * Where a new customer lands after registering: the page they were heading to, else the account
+ * overview with a welcome that is truthful about the confirmation email (`emailSent` false = the
+ * backend could not deliver it; undefined = an older backend that does not say).
+ */
+export function afterRegister(next: string, emailSent: boolean | undefined): string {
+  if (next && next !== FALLBACK) return next;
+  return emailSent === false ? "/account?welcome=unsent" : "/account?welcome=1";
+}
+
 /** `/login?next=…` for a protected path (path is the locale-less current path). */
 export function loginHref(next?: string | null): string {
   const target = next ? safeNext(next, "") : "";

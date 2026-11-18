@@ -98,7 +98,7 @@ export default async function StorePage({ params, searchParams }: Props) {
             </span>
           ) : null}
           <div className="min-w-0 flex-1">
-            <h1 className="tracking-display text-3xl font-extrabold text-balance sm:text-4xl">{s.name}</h1>
+            <h1 className="tracking-display text-2xl font-extrabold break-words text-balance min-[360px]:text-3xl sm:text-4xl">{s.name}</h1>
             {s.description ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">{s.description}</p> : null}
             {s.contact_email || s.contact_phone || website ? (
               <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label={t("contact")}>

@@ -93,7 +93,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             </span>
           ) : null}
           <div className="min-w-0">
-            <h1 className="tracking-display text-3xl font-extrabold text-balance sm:text-4xl">{node.name}</h1>
+            <h1 className="tracking-display text-2xl font-extrabold break-words text-balance min-[360px]:text-3xl sm:text-4xl">{node.name}</h1>
             {meta && meta.total > 0 ? (
               <p className="mt-1.5 text-sm text-muted-foreground">{t("productCount", { count: meta.total })}</p>
             ) : null}

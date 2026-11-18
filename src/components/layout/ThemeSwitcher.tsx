@@ -57,7 +57,7 @@ export function ThemeSwitcher({ variant = "menu" }: { variant?: "menu" | "segmen
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         aria-label={t("changeTheme")}
-        className="inline-flex size-8 items-center justify-center rounded-full text-foreground transition-colors hover:bg-surface data-[state=open]:bg-surface"
+        className="inline-flex size-8 items-center justify-center rounded-full text-utility-foreground transition-colors hover:bg-white/10 data-[state=open]:bg-white/10"
       >
         <TriggerIcon className="size-4" aria-hidden />
       </DropdownMenu.Trigger>

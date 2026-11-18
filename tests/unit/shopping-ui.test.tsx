@@ -23,6 +23,9 @@ const accountActions = vi.hoisted(() => ({
   accountWishlistToggle: vi.fn(),
 }));
 vi.mock("@/features/account/shop-actions", () => accountActions);
+// Account cart/wishlist WRITES go through the keep-alive write queue (shop-writes.ts).
+const shopWrites = vi.hoisted(() => ({ sendShopWrite: vi.fn() }));
+vi.mock("@/features/account/shop-writes", () => shopWrites);
 
 beforeAll(() => {
   Element.prototype.scrollTo = function () {} as typeof Element.prototype.scrollTo;
@@ -185,15 +188,16 @@ describe("PurchasePanel", () => {
     expect(cartStore.get().EG).toMatchObject([{ variantId: 1, quantity: 2, variantLabel: "Black / S", unitPrice: "449.0000" }]);
     expect(JSON.parse(localStorage.getItem("alo_cart_v1")!).EG[0].quantity).toBe(2);
     expect(accountActions.accountCartAdd).not.toHaveBeenCalled();
+    expect(shopWrites.sendShopWrite).not.toHaveBeenCalled();
   });
 
   it("signed in (before the account sync ran): adds to the account, never to this device's guest cart", () => {
     document.body.dataset.account = "1";
-    accountActions.accountCartAdd.mockResolvedValue({ ok: true, data: { lines: [], itemIds: {} } });
+    shopWrites.sendShopWrite.mockResolvedValue({ ok: true, data: { lines: [], itemIds: {} } });
     try {
       panel();
       act(() => fireEvent.click(screen.getByTestId("add-to-cart")));
-      expect(accountActions.accountCartAdd).toHaveBeenCalledWith("EG", 1, 1);
+      expect(shopWrites.sendShopWrite).toHaveBeenCalledWith({ type: "cartAdd", market: "EG", variantId: 1, quantity: 1 });
       expect(cartStore.mode()).toBe("memory");
       expect(JSON.parse(localStorage.getItem("alo_cart_v1") ?? "{}")).toEqual({});
     } finally {

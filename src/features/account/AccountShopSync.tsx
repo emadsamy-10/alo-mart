@@ -40,6 +40,7 @@ export function AccountShopSync({ signedIn }: { signedIn: boolean }) {
     }
 
     let cancelled = false;
+    shopState.setSynced(false);
     const guestCart = cartStore.readLocal();
     const guestWishlist = wishlistStore.readLocal();
     if (cartStore.mode() !== "memory") {
@@ -74,12 +75,16 @@ export function AccountShopSync({ signedIn }: { signedIn: boolean }) {
       if (cart.ok) applyAccountCart(market, cart.data);
       else if (!cart.signedOut) shopState.announce(t("loadFailed"));
       if (wishlist.ok) wishlistStore.set(wishlist.data);
+      shopState.setSynced(true);
       if ((!cart.ok && cart.signedOut) || (!wishlist.ok && wishlist.signedOut)) {
         cartStore.set(EMPTY_CART);
         wishlistStore.set(EMPTY_WISHLIST);
         window.location.reload();
       }
-    })();
+    })().catch(() => {
+      // Offline or unreachable: keep showing what we have; the next page load syncs again.
+      if (!cancelled) shopState.setSynced(true);
+    });
 
     return () => {
       cancelled = true;

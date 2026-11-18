@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/navigation";
 import { AppImage } from "@/components/shared/AppImage";
 import { cn } from "@/lib/utils/cn";
@@ -6,33 +6,49 @@ import { cn } from "@/lib/utils/cn";
 /**
  * The official ALO MART artwork (bag mark above a wordmark, from the Admin
  * project) cropped to the bag mark, with the wordmark set in type beside it.
- * The approved mockup's house mark is conceptual — keep this asset until the
- * business supplies a replacement file. Never redraw the mark.
+ * Never redraw the mark. `compact` is the mark alone, for the pinned row.
  */
 export function Logo({
   className,
   tone = "default",
+  compact = false,
 }: {
   className?: string;
   tone?: "default" | "footer";
+  compact?: boolean;
 }) {
   const t = useTranslations("Common");
+  const locale = useLocale();
   return (
-    <Link href="/" className={cn("group inline-flex min-w-0 items-center gap-3 rounded-xl", className)} aria-label={t("brandName")}>
-      <span className="relative block size-11 shrink-0 overflow-hidden rounded-[0.85rem] bg-brand shadow-sm lg:size-12">
+    <Link href="/" className={cn("group inline-flex min-w-0 items-center gap-2.5 rounded-xl", className)} aria-label={compact ? t("brandName") : undefined}>
+      <span className={cn("relative block shrink-0 overflow-hidden rounded-[0.8rem] bg-brand shadow-sm", compact ? "size-9" : "size-10 lg:size-12")}>
         <AppImage src="/brand/alo-mart-logo.jpeg" alt="" ratio="1/1" sizes="96px" priority className="origin-[50%_30%] scale-[1.8]" />
       </span>
-      {/* Below 360px the bag mark stands alone rather than truncating the name. */}
-      <span className="hidden min-w-0 min-[360px]:block">
-        <span
-          className={cn(
-            "text-xl leading-none font-extrabold whitespace-nowrap sm:text-[1.5rem] lg:text-[1.75rem]",
-            tone === "footer" ? "text-footer-foreground" : "text-brand-text",
-          )}
-        >
-          {t("brandName")}
+      {compact ? null : (
+        /* Below 360px the bag mark stands alone (the name stays for screen readers) rather than truncating. */
+        <span className="flex min-w-0 flex-col max-[359px]:sr-only">
+          <span
+            className={cn(
+              "text-xl leading-none font-extrabold whitespace-nowrap lg:text-[1.625rem]",
+              tone === "footer" ? "text-footer-foreground" : "text-brand-text",
+            )}
+          >
+            {t("brandName")}
+          </span>
+          {locale === "ar" ? (
+            <span
+              lang="en"
+              dir="ltr"
+              className={cn(
+                "mt-1 text-end text-[0.625rem] leading-none font-semibold tracking-[0.22em] lg:text-[0.6875rem]",
+                tone === "footer" ? "text-footer-muted" : "text-muted-foreground",
+              )}
+            >
+              ALO MART
+            </span>
+          ) : null}
         </span>
-      </span>
+      )}
     </Link>
   );
 }

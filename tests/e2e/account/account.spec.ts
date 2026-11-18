@@ -59,7 +59,8 @@ test.describe("profile", () => {
     await expect(form.getByLabel("Gender")).toHaveValue("female");
     await expect(form.getByLabel("Date of birth")).toHaveValue("1994-05-17");
     await page.getByTestId("account-menu").click();
-    await expect(page.getByText("Hello, Laila")).toBeVisible();
+    await expect(page.getByRole("menu").getByText("Hello, Laila")).toBeVisible();
+    await expect(page.getByTestId("account-menu")).toContainText("Hello, Laila");
     expect(errors).toEqual([]);
   });
 
@@ -188,7 +189,12 @@ test.describe("addresses", () => {
     await form.getByLabel("Country").selectOption({ label: "Egypt" });
     await form.getByLabel("Governorate / region").selectOption({ label: "Giza" });
     await expect(form.getByLabel("City / district")).toBeEnabled();
-    await expect(form.getByLabel("City / district").locator("option")).toHaveText(["Choose…", "Dokki", "6th of October"]);
+    // Exactly the active cities the public API lists for Giza right now (admins add cities at any time).
+    const regions = await api<{ id: number; name: string }[]>("GET", "/countries/1/regions");
+    const giza = regions.data.find((r) => r.name === "Giza")!;
+    const cities = await api<{ name: string }[]>("GET", `/regions/${giza.id}/cities`);
+    expect(cities.data.map((c) => c.name)).toContain("Dokki");
+    await expect(form.getByLabel("City / district").locator("option")).toHaveText(["Choose…", ...cities.data.map((c) => c.name)]);
     await form.getByLabel("City / district").selectOption({ label: "Dokki" });
     await form.getByLabel("Street and number").fill("14 Tahrir St");
     await form.getByLabel("Building").fill("9");
@@ -306,6 +312,8 @@ test.describe("orders", () => {
     await expect(page.getByText("White / XL")).toBeVisible();
     await expect(page.getByText("5 Tahrir Sq")).toBeVisible();
     await expect(page.getByText("Total", { exact: true })).toBeVisible();
+    // Items and delivery are shown gross: the tax line is included in them, not added on top (as at checkout).
+    await expect(page.getByText("Includes tax", { exact: true })).toBeVisible();
   });
 
   test("38 another customer's order is not found", async ({ page }) => {

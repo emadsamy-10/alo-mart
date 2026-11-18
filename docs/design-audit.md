@@ -47,7 +47,7 @@ They are a design language to translate, not assets to ship.
 
 Dark mode is a navy "showroom" — not an inversion: cards are lifted navy, image wells stay slightly lighter so product cut-outs on white backgrounds don't glare, and red is brightened for contrast.
 
-Type: **Tajawal** (Arabic, 400/500/700/800) and **Geist** (Latin, variable). Arabic locale leads with Tajawal; English with Geist, Tajawal as fallback for Arabic brand names.
+Type: **Alexandria** (variable weight, Arabic and Latin) for both locales, self-hosted by `next/font` (`--font-alexandria`). Replaced Tajawal (Arabic) and Geist (Latin) on 2026-11-10.
 
 Signature element: the **navy hero panel** — the one dark, large-radius surface on the homepage, holding the headline and a mosaic of the real department photography from the API. Everything else stays quiet: ivory page, white cards, red only for the brand and real discounts.
 

@@ -20,6 +20,14 @@ function imageRemotePatterns(): RemotePattern[] {
       port: api.port,
       pathname: "/storage/**",
     },
+    {
+      // Public design photos: signed links re-checked by the API on every fetch.
+      // Protected (viewer-bound) links are rendered unoptimized and never reach the optimiser cache.
+      protocol: api.protocol.replace(":", "") as "http" | "https",
+      hostname: api.hostname,
+      port: api.port,
+      pathname: `${api.pathname.replace(/\/$/, "")}/design-media/**`,
+    },
   ];
 
   for (const host of (process.env.IMAGE_REMOTE_HOSTS ?? "").split(",")) {
@@ -43,6 +51,10 @@ const localApi = ["localhost", "127.0.0.1", "[::1]"].includes(new URL(apiBaseUrl
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    // Designer Studio image uploads go through Server Actions (the API caps an image at 5 MB).
+    serverActions: { bodySizeLimit: "6mb" },
+  },
   images: {
     remotePatterns: imageRemotePatterns(),
     dangerouslyAllowLocalIP: localApi,

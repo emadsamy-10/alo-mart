@@ -33,20 +33,12 @@ function pageErrors(page: Page) {
 }
 
 test.describe("discovery", () => {
-  test("header search submits to the real catalog search (desktop popover / mobile menu)", async ({ page, isMobile }) => {
+  test("header search submits to the real catalog search with the keyboard", async ({ page }) => {
     const errors = pageErrors(page);
     await page.goto("/en");
-    if (isMobile) {
-      await page.getByRole("button", { name: "Open menu" }).click();
-      await page.getByRole("dialog").getByTestId("header-search").getByRole("searchbox").fill("shirt");
-      await page.getByRole("dialog").getByRole("button", { name: "Search", exact: true }).click();
-    } else {
-      await page.getByTestId("header-search-button").click();
-      const box = page.getByTestId("header-search").getByRole("searchbox");
-      await expect(box).toBeFocused();
-      await box.fill("shirt");
-      await box.press("Enter");
-    }
+    const box = page.locator("header").getByTestId("header-search").getByRole("searchbox");
+    await box.fill("shirt");
+    await box.press("Enter");
     await expect(page).toHaveURL(/\/en\/products\?q=shirt$/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("shirt");
     expect(errors).toEqual([]);
@@ -55,7 +47,6 @@ test.describe("discovery", () => {
   test("Arabic search from the header lands on the Arabic catalog", async ({ page, isMobile }) => {
     test.skip(isMobile, "covered by the English mobile test");
     await page.goto("/ar");
-    await page.getByTestId("header-search-button").click();
     await page.getByTestId("header-search").getByRole("searchbox").fill("قميص");
     await page.getByTestId("header-search").getByRole("searchbox").press("Enter");
     await expect(page).toHaveURL(/\/ar\/products\?q=/);

@@ -56,7 +56,7 @@ export function ResultCount({ total }: { total: number }) {
   const t = useTranslations("Catalog");
   const { pending } = useCatalog();
   return (
-    <p className="mt-1.5 flex min-h-6 items-center gap-2 text-sm text-muted-foreground sm:text-base" aria-live="polite" data-testid="result-count">
+    <p className="flex min-h-6 items-center gap-2 text-sm font-semibold text-muted-foreground" aria-live="polite" data-testid="result-count">
       {pending ? (
         <>
           <Loader2 className="size-4 animate-spin" aria-hidden />
@@ -74,10 +74,10 @@ export function CatalogPagination({ page, lastPage }: { page: number; lastPage: 
   const t = useTranslations("Common");
   const { state } = useCatalog();
   if (lastPage <= 1) return null;
-  const control = "grid size-11 place-items-center rounded-full border border-border-strong bg-surface transition hover:border-ink";
+  const control = "grid size-11 place-items-center rounded-xl border border-border bg-surface shadow-sm transition-colors hover:border-border-strong";
 
   return (
-    <nav aria-label={t("pagination")} className="mt-12 flex flex-col items-center gap-3" data-testid="pagination">
+    <nav aria-label={t("pagination")} className="mt-8 flex flex-col items-center gap-3 lg:mt-10" data-testid="pagination">
       <ul className="flex flex-wrap items-center justify-center gap-1.5">
         <li>
           {page > 1 ? (
@@ -98,8 +98,8 @@ export function CatalogPagination({ page, lastPage }: { page: number; lastPage: 
                 aria-current={p === page ? "page" : undefined}
                 aria-label={t("goToPage", { page: p })}
                 className={cn(
-                  "grid size-11 place-items-center rounded-full text-sm font-bold tabular-nums transition",
-                  p === page ? "bg-ink text-ink-foreground" : "hover:bg-surface-muted",
+                  "grid size-11 place-items-center rounded-xl text-sm font-bold tabular-nums transition-colors",
+                  p === page ? "bg-brand text-brand-foreground shadow-sm" : "border border-border bg-surface shadow-sm hover:border-border-strong",
                 )}
               >
                 {p}

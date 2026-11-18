@@ -1,11 +1,12 @@
 "use client";
 
 import "./globals.css";
+import { siteFont } from "@/lib/fonts";
 
-/** Last-resort boundary when the root layout itself fails. Kept dependency-free. */
+/** Last-resort boundary when the root layout itself fails. Kept dependency-free (the font is build-time only). */
 export default function GlobalError({ retry }: { error: Error & { digest?: string }; retry: () => void }) {
   return (
-    <html lang="en">
+    <html lang="en" className={siteFont.variable}>
       <body className="grid min-h-dvh place-items-center bg-background p-6 text-center text-foreground">
         <main className="max-w-md">
           <h1 className="text-2xl font-bold">Something went wrong</h1>

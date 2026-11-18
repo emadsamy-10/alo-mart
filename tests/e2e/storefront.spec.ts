@@ -62,6 +62,9 @@ test("staging is not indexable", async ({ page, request }) => {
 test("sitemap lists localized URLs with alternates", async ({ request }) => {
   const xml = await (await request.get("/sitemap.xml")).text();
   expect(xml).toContain("/ar</loc>");
+  // Every language version is its own <url>, not only an alternate of the Arabic one.
+  expect(xml).toContain("/en</loc>");
+  expect(xml).toMatch(/\/en\/products\/[^<]+<\/loc>/);
   expect(xml).toContain('hreflang="en"');
   expect(xml).toContain("/products/");
 });
@@ -82,6 +85,22 @@ test("product cards lead to a real product page with Product JSON-LD", async ({ 
 test("unknown product and unknown path return 404", async ({ page }) => {
   expect((await page.goto("/en/products/this-product-does-not-exist"))?.status()).toBe(404);
   expect((await page.goto("/ar/no-such-page"))?.status()).toBe(404);
+  // Its own title, not the homepage's.
+  await expect(page).toHaveTitle(/هذه الصفحة غير موجودة/);
+  expect((await page.goto("/en/no-such-page"))?.status()).toBe(404);
+  await expect(page).toHaveTitle(/This page doesn.t exist/);
+});
+
+test("store, brand and category headers fit a 320px window with a classic scrollbar in Arabic (long single-word names)", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "width is set explicitly");
+  // 320px window minus a 15px classic scrollbar (desktop browsers): the narrowest layout seen in QA.
+  await page.setViewportSize({ width: 305, height: 800 });
+  for (const path of ["/ar/stores/volta-electronics", "/ar/brands/nilewood", "/ar/categories/electronics"]) {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, path).toBe(0);
+  }
 });
 
 test("root redirects to a locale", async ({ page }) => {

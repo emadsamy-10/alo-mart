@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, LogOut, MapPin, Package, ShieldCheck, UserRound } from "lucide-react";
+import { BadgeCheck, Heart, LayoutDashboard, LogOut, MapPin, Package, PenTool, ShieldCheck, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useFormStatus } from "react-dom";
 import { Link, usePathname } from "@/lib/i18n/navigation";
@@ -13,6 +13,9 @@ export const ACCOUNT_LINKS = [
   { href: "/account/addresses", key: "addresses", icon: MapPin },
   { href: "/account/profile", key: "profile", icon: UserRound },
   { href: "/account/security", key: "security", icon: ShieldCheck },
+  { href: "/account/subscription", key: "subscription", icon: BadgeCheck },
+  { href: "/account/inspiration", key: "inspiration", icon: Heart },
+  { href: "/account/designer", key: "designer", icon: PenTool },
 ] as const;
 
 function isActive(pathname: string, href: string) {

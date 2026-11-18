@@ -9,6 +9,7 @@ import { AccountUnavailable } from "@/features/account/ui/Unavailable";
 import { getPaymentMethods, getQuote } from "@/features/checkout/api";
 import { defaultSelections, newIdempotencyKey } from "@/features/checkout/model";
 import { CheckoutForm } from "@/features/checkout/ui/CheckoutForm";
+import { VerifyEmailNotice } from "@/features/checkout/ui/VerifyEmailNotice";
 import { resolveMarket } from "@/features/markets/api";
 import { Link } from "@/lib/i18n/navigation";
 import type { Locale } from "@/lib/i18n/routing";
@@ -55,6 +56,8 @@ export default async function Page({ params, searchParams }: Props) {
     return (
       <Container className="pt-6 pb-12 sm:pt-8">
         {heading}
+        {/* Say it now, not after they have entered an address: a new order needs a confirmed email. */}
+        {customer.email_verified_at ? null : <VerifyEmailNotice />}
         <StatusPanel
           icon={<MapPin className="size-6" />}
           title={t("noAddressTitle")}

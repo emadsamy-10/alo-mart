@@ -157,7 +157,7 @@ export function SessionsList({ sessions }: { sessions: AccountSession[] }) {
             <div className="min-w-0 flex-1">
               <p className="font-semibold">
                 {s.name === "api" ? t("unnamedDevice") : s.name}
-                {s.is_current ? <span className="ms-2 rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">{t("thisDevice")}</span> : null}
+                {s.is_current ? <span className="ms-2 rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-foreground">{t("thisDevice")}</span> : null}
               </p>
               <p className="text-xs text-muted-foreground">
                 {t("signedInAt", { date: s.created_at ? formatDateTime(s.created_at, locale) : "—" })}

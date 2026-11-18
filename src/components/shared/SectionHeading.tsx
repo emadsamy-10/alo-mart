@@ -16,15 +16,16 @@ interface SectionHeadingProps {
 /** Every homepage section is an <h2>; the page <h1> lives in the hero. */
 export function SectionHeading({ id, title, subtitle, action, tone = "default", className }: SectionHeadingProps) {
   return (
-    <div className={cn("mb-5 flex items-end justify-between gap-4 sm:mb-7", className)}>
+    <div className={cn("mb-4 flex items-center justify-between gap-4 sm:mb-5", className)}>
       <div className="min-w-0">
         <h2
           id={id}
           className={cn(
-            "tracking-display text-[1.5rem] leading-tight font-extrabold text-balance sm:text-[1.75rem] lg:text-[2rem]",
+            "tracking-display flex items-center gap-3 text-[1.25rem] leading-tight font-extrabold text-balance sm:text-[1.5rem]",
             tone === "panel" ? "text-panel-foreground" : "text-foreground",
           )}
         >
+          <span className="h-0.5 w-7 shrink-0 rounded-full bg-brand" aria-hidden />
           {title}
         </h2>
         {subtitle ? (
@@ -38,7 +39,7 @@ export function SectionHeading({ id, title, subtitle, action, tone = "default", 
   );
 }
 
-/** Quiet "View all ‹" text link (approved design), with a 44px touch target. */
+/** Quiet red "View more ‹" text link, with a 44px touch target. */
 export function ViewAllLink({
   href,
   label,
@@ -53,16 +54,13 @@ export function ViewAllLink({
   return (
     <Link
       href={href}
-      aria-label={accessibleLabel}
       className={cn(
-        // Same height and border language as the carousel arrows beside it (44px).
-        "inline-flex h-11 items-center gap-1.5 rounded-full border ps-4 pe-3 text-sm font-semibold transition-colors",
-        tone === "panel"
-          ? "border-white/15 text-panel-foreground hover:bg-white/10"
-          : "border-border bg-surface text-foreground shadow-sm hover:border-border-strong hover:text-brand-text",
+        "inline-flex h-11 items-center gap-1.5 px-1 text-sm font-bold whitespace-nowrap transition-colors hover:underline hover:underline-offset-4",
+        tone === "panel" ? "text-panel-foreground" : "text-brand-text",
       )}
     >
       {label}
+      {accessibleLabel ? <span className="sr-only"> {accessibleLabel}</span> : null}
       <ChevronLeft className="size-4 ltr:rotate-180" aria-hidden />
     </Link>
   );

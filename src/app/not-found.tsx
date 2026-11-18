@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { arabicFont, latinFont } from "@/lib/fonts";
-import { cn } from "@/lib/utils/cn";
+import { siteFont } from "@/lib/fonts";
 
 /**
  * 404 for paths outside any locale that the proxy did not redirect
@@ -8,7 +7,7 @@ import { cn } from "@/lib/utils/cn";
  */
 export default function GlobalNotFound() {
   return (
-    <html lang="en" className={cn(latinFont.variable, arabicFont.variable)}>
+    <html lang="en" className={siteFont.variable}>
       <body className="grid min-h-dvh place-items-center bg-background p-6 text-center text-foreground">
         <main className="max-w-md">
           <p className="text-6xl font-extrabold text-brand">404</p>

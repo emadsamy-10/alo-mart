@@ -6,7 +6,7 @@ import { Dialog } from "radix-ui";
 import { buttonClass } from "@/components/ui/button";
 import { Link } from "@/lib/i18n/navigation";
 import { CartLineItem, CartSummary, useCartRefresh } from "./CartLines";
-import { useCart, useCartDrawer } from "./store";
+import { takeDrawerReturnFocus, useCart, useCartDrawer } from "./store";
 
 /** Slide-in mini cart (inline-end edge, mirrored in RTL). Mounted once in the layout. */
 export function CartDrawer() {
@@ -22,6 +22,14 @@ export function CartDrawer() {
           aria-describedby={undefined}
           className="sheet-end fixed inset-y-0 end-0 z-50 flex w-[min(28rem,100vw)] flex-col bg-background shadow-popover outline-none"
           data-testid="cart-drawer"
+          // Opened by setCartDrawerOpen (no Radix trigger): return focus to the control that opened it.
+          onCloseAutoFocus={(event) => {
+            const element = takeDrawerReturnFocus();
+            if (element?.isConnected) {
+              event.preventDefault();
+              element.focus();
+            }
+          }}
         >
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
             <Dialog.Title className="text-lg font-bold">
@@ -31,7 +39,15 @@ export function CartDrawer() {
               <X className="size-5" aria-hidden />
             </Dialog.Close>
           </div>
-          {open ? <DrawerBody lines={lines} onNavigate={() => setOpen(false)} /> : null}
+          {open ? (
+            <DrawerBody
+              lines={lines}
+              onNavigate={() => {
+                takeDrawerReturnFocus(); // leaving for another page: don't pull focus back to the old control
+                setOpen(false);
+              }}
+            />
+          ) : null}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

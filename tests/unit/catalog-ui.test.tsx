@@ -177,9 +177,9 @@ describe("FilterPanel", () => {
 
   it("applies stock and sale filters", () => {
     render(wrap(parseCatalogParams({}), <FilterPanel data={panel} idPrefix="t" />));
-    fireEvent.click(within(screen.getByTestId("filter-in-stock")).getByRole("checkbox"));
+    fireEvent.click(within(screen.getByTestId("filter-in-stock")).getByRole("switch"));
     expect(lastUrl()).toBe("/products?in_stock=1");
-    fireEvent.click(within(screen.getByTestId("filter-on-sale")).getByRole("checkbox"));
+    fireEvent.click(within(screen.getByTestId("filter-on-sale")).getByRole("switch"));
     expect(lastUrl()).toBe("/products?on_sale=1");
   });
 

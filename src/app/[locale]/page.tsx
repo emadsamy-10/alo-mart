@@ -9,9 +9,11 @@ import { MarketSwitcher } from "@/components/layout/MarketSwitcher";
 import { toNavCategories } from "@/components/layout/nav-types";
 import { getCategoryTree } from "@/features/catalog/api";
 import { getHomepage } from "@/features/homepage/api";
+import { BenefitsStrip } from "@/features/homepage/BenefitsStrip";
 import { Hero } from "@/features/homepage/Hero";
 import { pickHeroContent } from "@/features/homepage/hero-content";
-import { DEPARTMENTS_ANCHOR, SectionRenderer } from "@/features/homepage/SectionRenderer";
+import { SectionRenderer } from "@/features/homepage/SectionRenderer";
+import { getSupportEmail } from "@/features/settings/api";
 import { resolveMarket } from "@/features/markets/api";
 import type { Locale } from "@/lib/i18n/routing";
 import { localizedUrl } from "@/lib/seo/metadata";
@@ -42,21 +44,16 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   setRequestLocale(locale);
 
   const market = await resolveMarket(locale);
-  const [homepage, tree, t, tm] = await Promise.all([
+  const [homepage, tree, t, tm, supportEmail] = await Promise.all([
     getHomepage(locale, market.code),
     getCategoryTree(locale, market.code),
     getTranslations("States"),
     getTranslations("Metadata"),
+    getSupportEmail(locale),
   ]);
   const departments = tree.ok ? toNavCategories(tree.data) : [];
   const sections = homepage.ok ? homepage.data.sections : [];
   const heroContent = pickHeroContent(sections, departments);
-  // "Browse departments" scrolls to the Admin's category tiles when present, else opens the first department.
-  const browseHref = sections.some((s) => s.kind === "category")
-    ? `#${DEPARTMENTS_ANCHOR}`
-    : departments[0]
-      ? `/categories/${departments[0].slug}`
-      : null;
 
   return (
     <>
@@ -81,8 +78,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         content={heroContent}
         departments={departments}
         currencyCode={market.current?.currencyCode ?? null}
-        browseHref={browseHref}
       />
+      <BenefitsStrip supportEmail={supportEmail} />
 
       {!homepage.ok ? (
         <Container className="py-10">
@@ -108,8 +105,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           />
         </Container>
       ) : (
-        <div className="pt-3 sm:pt-5">
-          <SectionRenderer sections={homepage.data.sections} departments={departments} />
+        <div className="pt-2 sm:pt-3">
+          <SectionRenderer sections={homepage.data.sections} />
         </div>
       )}
     </>

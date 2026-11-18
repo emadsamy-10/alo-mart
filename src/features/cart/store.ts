@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
-import { accountCartAdd, accountCartClear, accountCartRemove, accountCartUpdate, type ShopResult } from "@/features/account/shop-actions";
+import type { ShopResult } from "@/features/account/shop-actions";
+import { sendShopWrite } from "@/features/account/shop-writes";
 import type { AccountCartView } from "@/features/account/shop-mapping";
 import { shopState } from "@/features/account/shop-state";
 import { useMarket } from "@/features/markets/MarketContext";
@@ -47,7 +48,9 @@ export function applyAccountCart(market: string, view: AccountCartView) {
  * from the API replaces it — the server is the source of truth, so a refused
  * change (e.g. out of stock) is rolled back and announced.
  */
-async function syncAccount(market: string, request: Promise<ShopResult<AccountCartView> & { message?: string }>) {
+type CartWrite = ShopResult<AccountCartView> & { message?: string };
+
+async function syncAccount(market: string, request: Promise<CartWrite>) {
   const result = await request;
   if ("data" in result && result.data) applyAccountCart(market, result.data);
   if (!result.ok) {
@@ -66,7 +69,7 @@ export function useCart() {
     (line: Omit<CartLine, "addedAt" | "issue">) => {
       const account = accountMode();
       cartStore.set((s) => addLine(s, market, line));
-      if (account) void syncAccount(market, accountCartAdd(market, line.variantId, line.quantity));
+      if (account) void syncAccount(market, sendShopWrite<CartWrite>({ type: "cartAdd", market, variantId: line.variantId, quantity: line.quantity }));
     },
     [market],
   );
@@ -75,7 +78,7 @@ export function useCart() {
       const account = accountMode();
       cartStore.set((s) => setQuantity(s, market, variantId, quantity));
       const id = shopState.itemId(market, variantId);
-      if (account && id) void syncAccount(market, accountCartUpdate(market, id, quantity));
+      if (account && id) void syncAccount(market, sendShopWrite<CartWrite>({ type: "cartUpdate", market, itemId: id, quantity }));
     },
     [market],
   );
@@ -84,14 +87,14 @@ export function useCart() {
       const account = accountMode();
       cartStore.set((s) => removeLine(s, market, variantId));
       const id = shopState.itemId(market, variantId);
-      if (account && id) void syncAccount(market, accountCartRemove(market, id));
+      if (account && id) void syncAccount(market, sendShopWrite<CartWrite>({ type: "cartRemove", market, itemId: id }));
     },
     [market],
   );
   const clear = useCallback(() => {
     const account = accountMode();
     cartStore.set((s) => clearMarket(s, market));
-    if (account) void syncAccount(market, accountCartClear(market));
+    if (account) void syncAccount(market, sendShopWrite<CartWrite>({ type: "cartClear", market }));
   }, [market]);
   const refresh = useCallback((r: LineRefresh[]) => cartStore.set((s) => applyRefresh(s, market, r)), [market]);
 
@@ -104,10 +107,21 @@ export function useCart() {
 /* Drawer visibility: in-memory only, shared by the header button, the
    add-to-cart button and the drawer itself. */
 let drawerOpen = false;
+/** The control that opened the drawer (header cart, Add to cart, quick add…): focus goes back there on close. */
+let drawerReturnFocus: HTMLElement | null = null;
 const drawerListeners = new Set<() => void>();
 export function setCartDrawerOpen(open: boolean) {
+  if (open && !drawerOpen && typeof document !== "undefined") {
+    drawerReturnFocus = document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : null;
+  }
   drawerOpen = open;
   drawerListeners.forEach((l) => l());
+}
+/** Takes (and forgets) where focus should return; call with nothing to forget it, e.g. when leaving via a link. */
+export function takeDrawerReturnFocus(): HTMLElement | null {
+  const element = drawerReturnFocus;
+  drawerReturnFocus = null;
+  return element;
 }
 export function useCartDrawer(): [boolean, (open: boolean) => void] {
   const open = useSyncExternalStore(

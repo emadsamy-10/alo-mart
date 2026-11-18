@@ -78,7 +78,7 @@ export default async function BrandPage({ params, searchParams }: Props) {
             <AppImage src={b.logo} alt={b.name} ratio="1/1" fit="contain" sizes="112px" priority className="p-3" />
           </span>
           <div className="min-w-0">
-            <h1 className="tracking-display text-3xl font-extrabold text-balance sm:text-4xl">{b.name}</h1>
+            <h1 className="tracking-display text-2xl font-extrabold break-words text-balance min-[360px]:text-3xl sm:text-4xl">{b.name}</h1>
             {b.description ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">{b.description}</p> : null}
           </div>
         </div>

@@ -52,6 +52,9 @@ export interface FilterPanelData {
 
 const VISIBLE = 6;
 
+const SWITCH =
+  "relative h-6 w-10 shrink-0 rounded-full bg-border-strong transition-colors peer-checked:bg-brand after:absolute after:start-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-white after:shadow-sm after:transition-all peer-checked:after:start-[1.125rem]";
+
 export function subtreeCount(node: FilterCategory): number {
   return node.children.reduce((n, c) => n + subtreeCount(c), node.count);
 }
@@ -107,7 +110,7 @@ export function FilterPanel({ data, idPrefix }: { data: FilterPanelData; idPrefi
         aria-hidden
         className={cn(
           "grid size-5 shrink-0 place-items-center rounded-md border-2 transition",
-          checked ? "border-ink bg-ink text-ink-foreground" : "border-border-strong bg-surface",
+          checked ? "border-brand bg-brand text-brand-foreground" : "border-border-strong bg-surface",
         )}
       >
         {checked ? <Check className="size-3.5" strokeWidth={3} /> : null}
@@ -119,6 +122,18 @@ export function FilterPanel({ data, idPrefix }: { data: FilterPanelData; idPrefi
       ) : (
         <span className="shrink-0 text-xs text-muted-foreground tabular-nums">{count}</span>
       )}
+    </label>
+  );
+
+  const toggle = ({ id, checked, onChange, label, testId }: CheckRowProps) => (
+    <label
+      htmlFor={id}
+      data-testid={testId}
+      className="flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl px-2.5 text-sm font-semibold transition-colors hover:bg-surface-muted has-focus-visible:outline-2 has-focus-visible:outline-(--focus-ring)"
+    >
+      {label}
+      <input id={id} type="checkbox" role="switch" checked={checked} onChange={onChange} className="peer sr-only" />
+      <span aria-hidden className={SWITCH} />
     </label>
   );
 
@@ -156,10 +171,7 @@ export function FilterPanel({ data, idPrefix }: { data: FilterPanelData; idPrefi
                 className="peer sr-only"
                 data-testid="include-descendants"
               />
-              <span
-                aria-hidden
-                className="relative h-6 w-10 shrink-0 rounded-full bg-border-strong transition peer-checked:bg-ink after:absolute after:start-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-surface after:shadow-sm after:transition-all peer-checked:after:start-[1.125rem]"
-              />
+              <span aria-hidden className={SWITCH} />
             </label>
           ) : null}
         </Group>
@@ -167,23 +179,6 @@ export function FilterPanel({ data, idPrefix }: { data: FilterPanelData; idPrefi
 
       <Group title={t("price")} testId="filter-group-price">
         <PriceRangeFilter bounds={data.price} currency={data.currency} currencyLabel={data.currencyLabel} />
-      </Group>
-
-      <Group title={t("availability")} testId="filter-group-availability">
-        {row({
-          id: `${idPrefix}-in-stock`,
-          checked: state.inStock,
-          onChange: () => navigate(withPatch(state, { inStock: !state.inStock })),
-          label: t("inStockOnly"),
-          testId: "filter-in-stock",
-        })}
-        {row({
-          id: `${idPrefix}-on-sale`,
-          checked: state.onSale,
-          onChange: () => navigate(withPatch(state, { onSale: !state.onSale })),
-          label: t("onSaleOnly"),
-          testId: "filter-on-sale",
-        })}
       </Group>
 
       {data.attributes.map((attribute) => {
@@ -275,6 +270,23 @@ export function FilterPanel({ data, idPrefix }: { data: FilterPanelData; idPrefi
           />
         </Group>
       ) : null}
+
+      <Group title={t("availability")} testId="filter-group-availability">
+        {toggle({
+          id: `${idPrefix}-on-sale`,
+          checked: state.onSale,
+          onChange: () => navigate(withPatch(state, { onSale: !state.onSale })),
+          label: t("onSaleOnly"),
+          testId: "filter-on-sale",
+        })}
+        {toggle({
+          id: `${idPrefix}-in-stock`,
+          checked: state.inStock,
+          onChange: () => navigate(withPatch(state, { inStock: !state.inStock })),
+          label: t("inStockOnly"),
+          testId: "filter-in-stock",
+        })}
+      </Group>
     </div>
   );
 }
@@ -282,7 +294,7 @@ export function FilterPanel({ data, idPrefix }: { data: FilterPanelData; idPrefi
 function Group({ title, children, testId }: { title: string; children: ReactNode; testId?: string }) {
   return (
     <details open className="group/f border-b border-border last:border-b-0" data-testid={testId}>
-      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 rounded-xl px-2.5 text-sm font-extrabold [&::-webkit-details-marker]:hidden">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 rounded-xl px-2.5 text-[0.9375rem] font-extrabold [&::-webkit-details-marker]:hidden">
         {title}
         <ChevronDown className="size-4 text-muted-foreground transition-transform group-open/f:rotate-180" aria-hidden />
       </summary>
@@ -394,7 +406,7 @@ function OptionList({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={searchLabel}
-            className="h-10 w-full rounded-full border border-border bg-surface ps-9 pe-3 text-sm outline-none focus-visible:border-ink"
+            className="h-10 w-full rounded-xl border border-border bg-surface ps-9 pe-3 text-sm outline-none focus-visible:border-brand"
           />
         </div>
       ) : null}

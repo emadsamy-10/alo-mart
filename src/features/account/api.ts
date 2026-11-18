@@ -50,13 +50,20 @@ export async function getOrder(locale: string, id: string) {
   return signedOutGuard(await accountCall("GET", `/user/orders/${id}`, orderSchema, { locale }), locale, `/account/orders/${id}`);
 }
 
-/* Public geography (cacheable: not customer data). */
+/*
+ * Public geography for the address forms. Not cached (revalidate 0): admins add, rename and deactivate
+ * countries, governorates and cities in the Admin Dashboard, a separate app that cannot invalidate this
+ * site's cache — with a cache, a new city stayed missing (and a deactivated one stayed selectable, then
+ * refused on save) for up to the cache lifetime. The lists are small and only read on address screens.
+ */
+const GEOGRAPHY = { revalidate: 0, tags: ["geography"] };
+
 export function getCountries(locale: string) {
-  return apiGet("/countries", placesSchema, { locale, revalidate: 3600, tags: ["geography"] });
+  return apiGet("/countries", placesSchema, { locale, ...GEOGRAPHY });
 }
 export function getRegions(locale: string, countryId: number) {
-  return apiGet(`/countries/${countryId}/regions`, placesSchema, { locale, revalidate: 3600, tags: ["geography"] });
+  return apiGet(`/countries/${countryId}/regions`, placesSchema, { locale, ...GEOGRAPHY });
 }
 export function getCities(locale: string, regionId: number) {
-  return apiGet(`/regions/${regionId}/cities`, placesSchema, { locale, revalidate: 3600, tags: ["geography"] });
+  return apiGet(`/regions/${regionId}/cities`, placesSchema, { locale, ...GEOGRAPHY });
 }

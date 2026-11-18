@@ -19,7 +19,7 @@ export async function Pagination({ path, page, lastPage, query = {} }: Paginatio
   if (lastPage <= 1) return null;
   const t = await getTranslations("Common");
   const href = (p: number) => ({ pathname: path, query: p <= 1 ? query : { ...query, page: String(p) } });
-  const control = "grid size-11 place-items-center rounded-full border border-border-strong bg-surface transition hover:border-ink";
+  const control = "grid size-11 place-items-center rounded-xl border border-border bg-surface shadow-sm transition-colors hover:border-border-strong";
 
   return (
     <nav aria-label={t("pagination")} className="mt-12 flex flex-col items-center gap-3">
@@ -43,8 +43,8 @@ export async function Pagination({ path, page, lastPage, query = {} }: Paginatio
                 aria-current={p === page ? "page" : undefined}
                 aria-label={t("goToPage", { page: p })}
                 className={cn(
-                  "grid size-11 place-items-center rounded-full text-sm font-bold tabular-nums transition",
-                  p === page ? "bg-ink text-ink-foreground" : "hover:bg-surface-muted",
+                  "grid size-11 place-items-center rounded-xl text-sm font-bold tabular-nums transition-colors",
+                  p === page ? "bg-brand text-brand-foreground shadow-sm" : "border border-border bg-surface shadow-sm hover:border-border-strong",
                 )}
               >
                 {p}

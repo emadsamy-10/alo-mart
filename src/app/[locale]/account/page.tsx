@@ -47,12 +47,13 @@ export default async function Page({ params, searchParams }: Props) {
       <AccountHeading title={t("overview.greeting", { name: customer.name.split(/\s+/)[0] ?? customer.name })} intro={t("overview.intro")} />
 
       {query.welcome === "1" ? <Notice>{t("overview.welcome", { email: customer.email })}</Notice> : null}
+      {query.welcome === "unsent" ? <Notice tone="warning">{t("overview.welcomeUnsent")}</Notice> : null}
 
       {!customer.email_verified_at ? (
         <div className="flex flex-col gap-4 rounded-panel border border-warning/30 bg-warning-soft p-5 sm:flex-row sm:items-center sm:justify-between" data-testid="verify-banner">
           <div>
             <p className="font-semibold">{t("overview.verifyTitle")}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{t("overview.verifyBody", { email: customer.email })}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{t(query.welcome === "unsent" ? "overview.verifyBodyUnsent" : "overview.verifyBody", { email: customer.email })}</p>
           </div>
           <ResendVerificationForm compact />
         </div>

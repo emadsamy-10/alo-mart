@@ -128,6 +128,16 @@ export function variantPrice(variant: VariantLike): { amount: string | null; reg
   return { amount: variant.price, regular: null };
 }
 
+/**
+ * The variant a product card may add without asking: only when the product has
+ * exactly one variant and it can be bought. Anything else needs a choice.
+ */
+export function quickAddVariant<T extends VariantLike>(variants: T[]): T | null {
+  if (variants.length !== 1) return null;
+  const [variant] = variants;
+  return variant.is_in_stock && variantPrice(variant).amount ? variant : null;
+}
+
 /** "Black / L" — the chosen option values, in axis order. */
 export function variantLabel(variant: VariantLike, axes: VariantAxis[]): string {
   return axes

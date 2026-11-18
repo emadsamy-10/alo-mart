@@ -58,7 +58,7 @@ export function Carousel({ headingId, title, subtitle, action, tone = "default",
   }
 
   const controlClass = cn(
-    "hidden size-11 items-center justify-center rounded-full border transition-colors disabled:opacity-35 lg:inline-flex",
+    "hidden size-9 items-center justify-center rounded-full border transition-colors disabled:opacity-35 lg:inline-flex",
     tone === "panel"
       ? "border-white/15 text-panel-foreground hover:bg-white/10"
       : "border-border bg-surface text-foreground shadow-sm hover:border-border-strong",
@@ -81,7 +81,7 @@ export function Carousel({ headingId, title, subtitle, action, tone = "default",
               disabled={edges.start}
               aria-label={t("scrollPrevious", { title })}
             >
-              <ChevronLeft className="size-5 rtl:rotate-180" aria-hidden />
+              <ChevronLeft className="size-4.5 rtl:rotate-180" aria-hidden />
             </button>
             <button
               type="button"
@@ -90,7 +90,7 @@ export function Carousel({ headingId, title, subtitle, action, tone = "default",
               disabled={edges.end}
               aria-label={t("scrollNext", { title })}
             >
-              <ChevronRight className="size-5 rtl:rotate-180" aria-hidden />
+              <ChevronRight className="size-4.5 rtl:rotate-180" aria-hidden />
             </button>
           </>
         }

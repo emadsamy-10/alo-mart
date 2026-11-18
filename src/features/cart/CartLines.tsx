@@ -119,7 +119,8 @@ export function CartSummary({ className, onNavigate }: { className?: string; onN
   if (!sub) return null;
   return (
     <div className={cn("space-y-3", className)}>
-      <div className="flex items-baseline justify-between gap-4">
+      {/* Wraps as whole units on narrow screens: the price moves below rather than splitting the label. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <p className="text-base font-bold">{t("subtotal", { count })}</p>
         <p className="text-xl font-extrabold text-brand-text tabular-nums" data-testid="cart-subtotal">
           {formatMoney(sub.amount, sub.currency, locale)}

@@ -94,6 +94,41 @@ test.describe("cart and wishlist across sign-in", () => {
   });
 });
 
+test.describe("signed-in lists load without a false empty state", () => {
+  test("84 cart and wishlist pages wait for the account instead of flashing 'empty', and say they are the account's", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "mobile", "the cart page's layout shift was measured on phones; the logic is the same everywhere");
+    const shopper = await createShopper("no-flash");
+    const product = await api<{ id: number }>("GET", `/products/${TEE}?market=EG`);
+    expect((await api("POST", "/user/cart/items", { token: shopper.token, body: { product_variant_id: 49, quantity: 1, market: "EG" } })).status).toBe(200);
+    expect((await api("POST", "/user/wishlist/items", { token: shopper.token, body: { product_id: product.data.id, market: "EG" } })).status).toBeLessThan(300);
+    await signIn(page, shopper);
+    // Record every empty-state text that is ever rendered, however briefly.
+    await page.addInitScript(() => {
+      const w = window as unknown as { __empty: string[]; __cls: number };
+      w.__empty = [];
+      w.__cls = 0;
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) if (!e.hadRecentInput) w.__cls += e.value;
+      }).observe({ type: "layout-shift", buffered: true });
+      new MutationObserver(() => {
+        for (const text of ["Your cart is empty", "No saved products yet"]) if (document.body?.innerText.includes(text) && !w.__empty.includes(text)) w.__empty.push(text);
+      }).observe(document, { subtree: true, childList: true, characterData: true });
+    });
+    for (const [path, line] of [["/en/cart", "cart-line"], ["/en/wishlist", "wishlist-item"]] as const) {
+      await page.goto(path);
+      await expect(page.getByTestId(line).first()).toBeVisible();
+      expect(await page.evaluate(() => (window as unknown as { __empty: string[] }).__empty), path).toEqual([]);
+      await page.waitForTimeout(500);
+      // The space is reserved while the account loads: no "poor" layout shift (Web Vitals: good < 0.1).
+      expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls), `${path} layout shift`).toBeLessThan(0.1);
+    }
+    // A signed-in cart is the account's, not this browser's.
+    await page.goto("/en/cart");
+    await expect(page.getByText("This cart is saved to your account.")).toBeVisible();
+    await expect(page.getByText("saved in this browser")).toHaveCount(0);
+  });
+});
+
 test.describe("product details", () => {
   test.beforeEach(({}, testInfo) => test.skip(testInfo.project.name !== "desktop", "desktop flows"));
 

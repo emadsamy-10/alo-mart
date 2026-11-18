@@ -30,6 +30,24 @@ const departments = [
 ];
 
 describe("pickHeroContent", () => {
+  it("builds up to three distinct landscape slides, main banner first, never reusing a promo photo", () => {
+    const content = pickHeroContent(
+      sections([
+        { id: "feat", type: "featured_products", title: "Featured", sort_order: 1, items: [product(1, 1200, 800), product(2, 1200, 800), product(3, 800, 800)] },
+        { id: "new", type: "new_arrivals", title: "New", sort_order: 2, items: [product(4, 1200, 800), product(5, 1200, 800)] },
+      ]),
+      [],
+    );
+    expect(content.slides[0]).toEqual(content.feature);
+    expect(content.slides.map((s) => s.product.id)).toEqual([1, 2, 4]);
+    expect(content.slides.map((s) => s.eyebrow)).toEqual(["Featured", "Featured", "New"]);
+  });
+
+  it("shows one slide when no other landscape photo exists", () => {
+    const content = pickHeroContent(sections([{ id: "feat", type: "featured_products", sort_order: 1, items: [product(1, 1200, 800), product(2, 800, 800)] }]), []);
+    expect(content.slides.map((s) => s.product.id)).toEqual([1]);
+  });
+
   it("features a landscape photo from the Admin's featured products, with the section title as eyebrow", () => {
     const content = pickHeroContent(
       sections([

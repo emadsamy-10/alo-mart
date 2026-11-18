@@ -115,7 +115,7 @@ export function PriceRangeFilter({ bounds, currency, currencyLabel }: PriceRange
 
   const money = (v: number | string) => formatMoney(v, currency, locale) ?? String(v);
   const box =
-    "relative flex h-16 flex-col justify-center rounded-2xl border bg-surface px-3.5 transition-colors focus-within:border-ink has-[input[aria-invalid=true]]:border-danger";
+    "relative flex h-16 flex-col justify-center rounded-2xl border bg-surface px-3.5 transition-colors focus-within:border-brand has-[input[aria-invalid=true]]:border-danger";
 
   return (
     <form onSubmit={submit} noValidate data-testid="price-filter" className="space-y-4 px-2.5">
@@ -136,7 +136,7 @@ export function PriceRangeFilter({ bounds, currency, currencyLabel }: PriceRange
               onChange={(e) => setMinText(e.target.value)}
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? errorId : undefined}
-              className="w-full min-w-0 bg-transparent text-[0.9375rem] font-bold tabular-nums outline-none placeholder:font-medium placeholder:text-muted-foreground/70"
+              className="w-full min-w-0 bg-transparent text-sm font-bold tabular-nums outline-none placeholder:font-medium placeholder:text-muted-foreground/70"
             />
             <span className="shrink-0 text-xs font-semibold text-muted-foreground">{currencyLabel}</span>
           </div>
@@ -157,7 +157,7 @@ export function PriceRangeFilter({ bounds, currency, currencyLabel }: PriceRange
               onChange={(e) => setMaxText(e.target.value)}
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? errorId : undefined}
-              className="w-full min-w-0 bg-transparent text-[0.9375rem] font-bold tabular-nums outline-none placeholder:font-medium placeholder:text-muted-foreground/70"
+              className="w-full min-w-0 bg-transparent text-sm font-bold tabular-nums outline-none placeholder:font-medium placeholder:text-muted-foreground/70"
             />
             <span className="shrink-0 text-xs font-semibold text-muted-foreground">{currencyLabel}</span>
           </div>
@@ -185,14 +185,14 @@ export function PriceRangeFilter({ bounds, currency, currencyLabel }: PriceRange
             data-testid="price-slider"
           >
             <Slider.Track className="relative h-1.5 grow overflow-hidden rounded-full bg-surface-muted">
-              <Slider.Range className="absolute h-full rounded-full bg-ink" />
+              <Slider.Range className="absolute h-full rounded-full bg-brand" />
             </Slider.Track>
             {[t("priceMinThumb"), t("priceMaxThumb")].map((label, i) => (
               <Slider.Thumb
                 key={label}
                 aria-label={label}
                 aria-valuetext={money(sliderValue[i])}
-                className="block size-6 rounded-full border-2 border-ink bg-surface shadow-card outline-none transition-shadow hover:shadow-raised focus-visible:ring-4 focus-visible:ring-(--focus-ring)/30"
+                className="block size-6 rounded-full border-2 border-brand bg-surface shadow-card outline-none transition-shadow hover:shadow-raised focus-visible:ring-4 focus-visible:ring-(--focus-ring)/30"
               />
             ))}
           </Slider.Root>
@@ -212,7 +212,7 @@ export function PriceRangeFilter({ bounds, currency, currencyLabel }: PriceRange
       <div className="flex items-center gap-2">
         <button
           type="submit"
-          className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-ink px-4 text-sm font-bold text-ink-foreground transition hover:bg-ink/90"
+          className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-brand px-4 text-sm font-bold text-brand-foreground transition-colors hover:bg-brand-ink"
         >
           {t("priceApply")}
         </button>

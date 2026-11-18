@@ -13,7 +13,7 @@
   "Common": {
     "skipToContent": "Skip to content",
     "home": "Home",
-    "viewAll": "View all",
+    "viewAll": "View more",
     "close": "Close",
     "previous": "Previous",
     "next": "Next",
@@ -35,7 +35,22 @@
     "shopDepartment": "Shop all {name}",
     "preferences": "Preferences",
     "allProducts": "All products",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "home": "Home",
+    "stores": "Stores",
+    "brands": "Brands",
+    "newArrivals": "New arrivals",
+    "bestSellers": "Best sellers",
+    "offers": "Offers",
+    "viewAll": "View all",
+    "shopNow": "Shop now",
+    "deliveryNote": "Delivery options and fees are shown for your address at checkout",
+    "myOrders": "My orders",
+    "support": "Customer support",
+    "quickNavigation": "Quick navigation",
+    "cart": "Cart",
+    "account": "Account",
+    "designers": "Designers"
   },
   "Preferences": {
     "language": "Language",
@@ -62,18 +77,21 @@
     "browse": "Browse departments",
     "eyebrow": "ALO MART picks",
     "shopNow": "Shop now",
-    "viewProduct": "View product"
+    "viewProduct": "View product",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "goToSlide": "Go to slide {number}"
   },
   "Sections": {
-    "viewCategory": "View all in {name}",
-    "viewBrand": "View {name}",
+    "viewCategory": "in {name}",
+    "viewBrand": "from {name}",
     "scrollPrevious": "Scroll {title} back",
     "scrollNext": "Scroll {title} forward",
     "untitledProducts": "Products",
     "untitledCategories": "Departments",
     "untitledBrands": "Brands",
-    "leadEyebrow": "Department",
-    "leadCta": "Shop all {name}"
+    "dealsEyebrow": "Real reductions",
+    "viewAllCategories": "Browse all products"
   },
   "Product": {
     "priceRange": "{from} – {to}",
@@ -110,7 +128,11 @@
   "Brand": {
     "products": "Products by {name}",
     "empty": "No {name} products in your market yet",
-    "emptyHint": "Try another market, or come back once stores publish them."
+    "emptyHint": "Try another market, or come back once stores publish them.",
+    "all": "Brands",
+    "allDescription": "Every brand available on ALO MART. Open one to browse its products.",
+    "noneTitle": "No brands yet",
+    "noneBody": "Brands will appear here as soon as they are published."
   },
   "Home": {
     "sectionsLabel": "Featured collections"
@@ -126,7 +148,8 @@
     "stores": "Stores",
     "account": "My account",
     "orders": "My orders",
-    "support": "Customer support"
+    "support": "Customer support",
+    "accountHeading": "Your account"
   },
   "States": {
     "emptyHomeTitle": "Nothing to show in {market} yet",
@@ -171,7 +194,8 @@
     "quantity": "Quantity",
     "decrease": "Decrease quantity",
     "increase": "Increase quantity",
-    "localCartNote": "Prices and availability are confirmed again at checkout. Adding to the cart doesn't reserve stock."
+    "localCartNote": "Prices and availability are confirmed again at checkout. Adding to the cart doesn't reserve stock.",
+    "quickAdd": "Add {name} to cart"
   },
   "Cart": {
     "title": "Cart",
@@ -195,7 +219,9 @@
     "localNote": "This cart is saved in this browser on this device. It is not linked to an account and doesn't reserve stock.",
     "lineOutOfStock": "Out of stock — remove it or check back later",
     "lineUnavailable": "No longer available in your market",
-    "checkout": "Proceed to checkout"
+    "checkout": "Proceed to checkout",
+    "count": ", {count, plural, =0 {empty} one {# item} other {# items}}",
+    "accountNote": "This cart is saved to your account. Items aren't reserved until you place your order."
   },
   "Wishlist": {
     "title": "Wishlist",
@@ -209,7 +235,9 @@
     "browse": "Browse products",
     "unavailable": "No longer available in your market",
     "outOfStock": "Out of stock",
-    "from": "From {price}"
+    "from": "From {price}",
+    "count": ", {count, plural, =0 {empty} one {# product} other {# products}}",
+    "emptyBodyAccount": "Tap the heart on any product to save it here. Saved products stay in your account."
   },
   "Catalog": {
     "title": "All products",
@@ -286,7 +314,9 @@
     "pageGoneBody": "These results now end at page {last}.",
     "goToLastPage": "Go to the last page",
     "noSearchResultsTitle": "No results for “{term}”",
-    "noSearchResultsBody": "Check the spelling, try a shorter or more general word, or search in the other language."
+    "noSearchResultsBody": "Check the spelling, try a shorter or more general word, or search in the other language.",
+    "searchWithin": "Search within results",
+    "searchWithinPlaceholder": "Search within results…"
   },
   "Auth": {
     "optional": "Optional",
@@ -352,6 +382,7 @@
       "resend": "Send a new confirmation link",
       "resending": "Sending…",
       "tooSoon": "Please wait a minute before requesting another email.",
+      "notSent": "We couldn't send the email right now. Please try again in a few minutes.",
       "resent": "A new confirmation link is on its way.",
       "verified": {
         "title": "Your email is confirmed",
@@ -397,9 +428,14 @@
       "signOut": "Sign out",
       "signIn": "Sign in",
       "register": "Create account",
-      "menuFor": "Account menu for {name}",
       "hello": "Hello, {name}",
-      "verifyPending": "Email not confirmed yet"
+      "verifyPending": "Email not confirmed yet",
+      "guestGreeting": "Hello, sign in",
+      "guestRegister": "or create an account",
+      "myAccount": "My account",
+      "subscription": "Subscriptions",
+      "inspiration": "My Inspiration",
+      "designer": "Designer Studio"
     },
     "titles": {
       "overview": "My account",
@@ -410,14 +446,22 @@
       "order": "Order details",
       "newAddress": "New address",
       "editAddress": "Edit address",
-      "description": "Your ALO MART account."
+      "description": "Your ALO MART account.",
+      "subscription": "My subscriptions",
+      "inspiration": "My Inspiration",
+      "designer": "Designer Studio",
+      "designs": "My designs",
+      "newDesign": "New design",
+      "editDesign": "Edit design"
     },
     "overview": {
       "greeting": "Hello, {name}",
       "intro": "Manage your orders, delivery addresses and account details.",
       "welcome": "Your account is ready. We sent a confirmation link to {email}.",
+      "welcomeUnsent": "Your account is ready, but we couldn't send the confirmation email just now. Use “Send a new confirmation link” in a minute.",
       "verifyTitle": "Please confirm your email address",
-      "verifyBody": "We sent a link to {email}. It keeps your account secure and lets you reset your password.",
+      "verifyBody": "We sent a link to {email}. Confirm your email to place orders. It also keeps your account secure and lets you reset your password.",
+      "verifyBodyUnsent": "Confirm {email} to place orders. It also keeps your account secure and lets you reset your password.",
       "ordersCount": "{count, plural, =0 {No orders yet} one {# order} other {# orders}}",
       "unavailable": "Not available right now.",
       "noAddress": "No address saved yet",
@@ -455,6 +499,7 @@
       "sessionsIntro": "Sign out of any device you do not recognise.",
       "passwordChanged": "Your password was changed. Other devices were signed out.",
       "emailChanged": "Your email is now {email}. We sent a confirmation link to it, and a notice to your previous address.",
+      "emailChangedUnsent": "Your email is now {email}, but we couldn't send the confirmation link yet. Use “Send a new confirmation link” in a minute.",
       "phoneChanged": "Your mobile number was updated.",
       "sessionNotFound": "This session was not found.",
       "sessionRevoked": "That device was signed out.",
@@ -553,7 +598,7 @@
       "deliverTo": "Delivery address",
       "summary": "Order summary",
       "merchandise": "Items",
-      "tax": "Tax",
+      "tax": "Includes tax",
       "total": "Total",
       "status": {
         "placed": "Placed",
@@ -640,11 +685,12 @@
       "rateLimited": "Too many attempts. Please wait a minute and try again.",
       "place": "We couldn't place your order. Nothing was charged. Please try again.",
       "payment": "We couldn't start the payment. Please try again.",
-      "emailUnverified": "Please verify your email address before placing an order."
+      "emailUnverified": "Please verify your email address before placing an order.",
+      "placeInterrupted": "The connection dropped and we couldn't confirm your order. Please try again: this can't create a second order."
     },
     "confirmation": {
       "title": "Thank you — your order is placed.",
-      "body": "Order {number} is confirmed. You'll find it any time under My orders.",
+      "body": "Order {number} is saved. You'll find it any time under My orders.",
       "paymentNotStarted": "The payment couldn't be started. Your order is saved — you can pay for it below."
     },
     "payment": {
@@ -670,7 +716,7 @@
     },
     "verifyEmail": {
       "title": "Verify your email to place your order",
-      "body": "Your cart and address are saved. Open the link we emailed you, then come back and place your order. Didn’t get it? Send a new link."
+      "body": "Your cart stays saved. Open the link we emailed you, then come back here to place your order. Didn’t get it? Send a new link."
     }
   },
   "Store": {
@@ -685,5 +731,333 @@
     "policies": "Store policies",
     "noneTitle": "No stores yet",
     "noneBody": "Stores appear here once they open on ALO MART."
+  },
+  "Benefits": {
+    "label": "What ALO MART gives you",
+    "storesTitle": "Many stores",
+    "storesBody": "Products from independent stores in one place",
+    "deliveryTitle": "Delivery by address",
+    "deliveryBody": "Options and fees show before you confirm",
+    "ordersTitle": "Follow your orders",
+    "ordersBody": "See the status of every order in your account",
+    "supportTitle": "Customer support",
+    "supportBody": "Reach us by email"
+  },
+  "Designers": {
+    "metaTitle": "Designers and designs",
+    "metaDescription": "Discover designs and designers on ALO MART: interiors, fashion, product and graphic work with photos and videos.",
+    "hub": {
+      "title": "Designers",
+      "intro": "Discover work by designers on ALO MART, and the designers behind it.",
+      "tabsLabel": "Browse",
+      "tabDesigns": "Designs",
+      "tabDesigners": "Designers",
+      "searchLabel": "Search",
+      "searchDesigns": "Search designs",
+      "searchDesigners": "Search designers",
+      "search": "Search",
+      "category": "Category",
+      "allCategories": "All categories",
+      "withVideo": "With video",
+      "results": "{count, plural, =1 {1 result} other {# results}}",
+      "emptyDesignsTitle": "No designs yet",
+      "emptyDesignsBody": "Published designs will appear here once designers share their work and it has been reviewed.",
+      "emptyDesignersTitle": "No designers yet",
+      "emptyDesignersBody": "Approved designers will appear here.",
+      "noMatchTitle": "Nothing matches your search",
+      "noMatchBody": "Try other words or clear the filters.",
+      "clear": "Clear filters",
+      "becomeDesigner": "Are you a designer?",
+      "becomeDesignerBody": "Show your portfolio on ALO MART with the account you already shop with.",
+      "becomeDesignerCta": "Become a designer",
+      "plansCta": "See subscriptions"
+    },
+    "card": {
+      "by": "by {name}",
+      "membersOnly": "Members",
+      "video": "Video",
+      "photos": "{count, plural, =1 {1 photo} other {# photos}}",
+      "designs": "{count, plural, =0 {No published designs} =1 {1 design} other {# designs}}"
+    },
+    "categories": {
+      "interior": "Interior design",
+      "architecture": "Architecture",
+      "fashion": "Fashion",
+      "graphic": "Graphic design",
+      "product": "Product design",
+      "furniture": "Furniture",
+      "jewelry": "Jewelry",
+      "other": "Other"
+    },
+    "design": {
+      "gallery": "Photos",
+      "about": "About this design",
+      "tags": "Tags",
+      "videos": "Videos",
+      "designer": "Designer",
+      "moreFrom": "More from {name}",
+      "viewProfile": "View profile",
+      "published": "Published {date}",
+      "photoOf": "Photo {index} of {total}",
+      "lockedTitle": "Members-only details",
+      "lockedBody": "The description, photos and videos of this design are open to Customer Plus members.",
+      "lockedCta": "See Customer Plus",
+      "lockedSignIn": "Sign in",
+      "notFound": "This design is not available."
+    },
+    "video": {
+      "play": "Play video: {title}",
+      "open": "Open on {provider}",
+      "consent": "The video loads from {provider} when you press play.",
+      "fallbackTitle": "Video",
+      "unavailable": "If the video does not load, open it on {provider}."
+    },
+    "designer": {
+      "about": "About",
+      "specialties": "Specialties",
+      "links": "Links",
+      "portfolio": "Portfolio",
+      "videos": "Videos",
+      "emptyPortfolio": "No published designs yet.",
+      "memberSince": "Designer on ALO MART since {date}",
+      "ownProfile": "This is your public profile.",
+      "editInStudio": "Edit in Designer Studio"
+    },
+    "follow": {
+      "follow": "Follow",
+      "following": "Following",
+      "unfollow": "Unfollow {name}",
+      "followName": "Follow {name}",
+      "save": "Save",
+      "saved": "Saved",
+      "saveName": "Save {name}",
+      "unsaveName": "Remove {name} from My Inspiration",
+      "needPlus": "Following designers and saving designs are Customer Plus features.",
+      "seePlans": "See Customer Plus",
+      "signIn": "Sign in to follow and save"
+    },
+    "plans": {
+      "title": "Subscriptions",
+      "metaDescription": "Designer and Customer Plus subscriptions on ALO MART.",
+      "intro": "Two independent subscriptions. One account can hold both.",
+      "tabsLabel": "Subscription type",
+      "forDesigners": "For designers",
+      "forCustomers": "For customers",
+      "honest": "Subscriptions are activated by the ALO MART team after review. Online payment is not available yet: sending a request charges nothing, and the team will contact you about payment.",
+      "noPlansTitle": "No plans available yet",
+      "noPlansBody": "Plans appear here once the ALO MART team publishes them.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "perMonth": "/ month",
+      "perYear": "/ year",
+      "listPrice": "List price",
+      "included": "What's included",
+      "period": "Billing period",
+      "note": "Note for the team",
+      "notePlaceholder": "Anything the team should know (optional)",
+      "request": "Send request",
+      "requesting": "Sending…",
+      "signIn": "Sign in to request",
+      "verifyFirst": "Verify your email address to send a request.",
+      "verifyCta": "Verify in my account",
+      "applyFirst": "Apply to become a designer before requesting this plan.",
+      "applyCta": "Become a designer",
+      "pending": "Your request is under review.",
+      "activeUntil": "Active until {date}",
+      "renewHint": "Sending a request now asks the team to add another period.",
+      "manage": "Manage my subscriptions",
+      "onlinePayment": "Online payment coming soon"
+    },
+    "entitlements": {
+      "max_published_designs": "Up to {value} published designs",
+      "max_images_per_design": "Up to {value} photos per design",
+      "max_videos_per_design": "Up to {value} YouTube or Vimeo videos per design",
+      "follow_designers": "Follow designers",
+      "save_designs": "Save designs to My Inspiration",
+      "members_only_designs": "Open members-only design details",
+      "max_saved_designs": "Save up to {value} designs",
+      "profile": "Approved public designer profile and portfolio",
+      "review": "Every design is reviewed before it is published"
+    },
+    "subscription": {
+      "intro": "Your Designer plan and Customer Plus are separate: each has its own status and dates.",
+      "honest": "Subscriptions are activated by the ALO MART team. There is no automatic card payment or renewal.",
+      "designer": "Designer plan",
+      "customer": "Customer Plus",
+      "status": {
+        "active": "Active",
+        "cancelling": "Ends at period end",
+        "cancelled": "Cancelled",
+        "expired": "Expired",
+        "revoked": "Revoked",
+        "none": "No subscription",
+        "pending": "Under review",
+        "approved": "Approved",
+        "rejected": "Not approved",
+        "withdrawn": "Withdrawn"
+      },
+      "plan": "Plan",
+      "period": "Period",
+      "started": "Started",
+      "ends": "Ends",
+      "accessUntil": "You keep access until {date}.",
+      "source": "Activated by the ALO MART team (not an online payment).",
+      "none": "You don't have this subscription.",
+      "seePlans": "See plans",
+      "renew": "Request renewal",
+      "cancel": "Cancel at period end",
+      "cancelConfirm": "Cancel at the end of the current period? You keep access until {date}. Nothing is refunded automatically.",
+      "confirm": "Yes, cancel",
+      "keep": "Keep it",
+      "cancelScheduled": "Your subscription will end at the end of the current period.",
+      "pendingRequest": "Request sent {date}: {plan}, {period}.",
+      "withdraw": "Withdraw request",
+      "withdrawn": "Request withdrawn.",
+      "requested": "Request sent. The ALO MART team will review it. Nothing has been charged.",
+      "lastRejected": "Your last request was not approved.",
+      "teamNote": "Team note: {note}",
+      "history": "History",
+      "historyEmpty": "No subscription history yet.",
+      "requestRow": "Request · {plan} · {period}",
+      "subscriptionRow": "{plan} · {from} – {to}"
+    },
+    "studio": {
+      "title": "Designer Studio",
+      "navLabel": "Designer Studio sections",
+      "nav": {
+        "profile": "Profile",
+        "designs": "My designs",
+        "subscription": "Subscription"
+      },
+      "applyTitle": "Become a designer",
+      "applyIntro": "Use the ALO MART account you already have. The team reviews every new designer profile before it is public.",
+      "applyVerifyNote": "You can apply now. Verify your email before you request a plan or submit designs.",
+      "apply": "Send application",
+      "applied": "Application sent. The ALO MART team will review your profile.",
+      "resubmit": "Send for review again",
+      "resubmitted": "Application sent again for review.",
+      "fields": {
+        "display_name": "Display name",
+        "headline": "Headline",
+        "bio": "Short bio",
+        "city": "City",
+        "specialties": "Specialties",
+        "specialtiesHint": "Separate with commas, up to 8.",
+        "links": "Links",
+        "linksHint": "One https:// link per line (Instagram, Behance, your website), up to 5."
+      },
+      "saveProfile": "Save profile",
+      "profileSaved": "Profile saved.",
+      "statusLabel": "Application",
+      "statusText": {
+        "pending": "Under review. You can write drafts while you wait.",
+        "approved": "Approved.",
+        "rejected": "Not approved. Update your profile and send it again.",
+        "suspended": "Suspended. Contact ALO MART support."
+      },
+      "status": {
+        "pending": "Under review",
+        "approved": "Approved",
+        "rejected": "Not approved",
+        "suspended": "Suspended"
+      },
+      "reason": "Team note: {reason}",
+      "visible": "Your profile is public.",
+      "hiddenNoPlan": "Your profile is approved, but it is public only while your Designer subscription is active.",
+      "hiddenPending": "Your profile becomes public after approval and with an active Designer subscription.",
+      "viewPublic": "View public profile",
+      "planCta": "Designer plan",
+      "images": "Profile images",
+      "avatar": "Profile photo",
+      "cover": "Cover image",
+      "upload": "Upload",
+      "remove": "Remove",
+      "imageHint": "JPG, PNG or WebP, up to 5 MB, at least 200 × 200 pixels.",
+      "chooseImage": "Choose an image first.",
+      "imageSaved": "Image uploaded.",
+      "imageRemoved": "Image removed.",
+      "noImage": "No image yet",
+      "designsIntro": "Drafts are private. Submitted designs are reviewed before they are published.",
+      "newDesign": "New design",
+      "emptyTitle": "No designs yet",
+      "emptyBody": "Create your first design: add photos and videos, then submit it for review.",
+      "quota": "{used} of {max} published or under review",
+      "quotaDraft": "Publishing needs an active Designer subscription.",
+      "designStatus": {
+        "draft": "Draft",
+        "pending_review": "Under review",
+        "published": "Published",
+        "rejected": "Not approved",
+        "archived": "Unpublished"
+      },
+      "updated": "Updated {date}",
+      "edit": "Edit",
+      "designForm": {
+        "title": "Title",
+        "description": "Description",
+        "category": "Category",
+        "chooseCategory": "Choose a category",
+        "tags": "Tags",
+        "tagsHint": "Separate with commas, up to 10.",
+        "membersOnly": "Members-only details",
+        "membersOnlyHint": "The card stays public; the description, photos and videos are shown to Customer Plus members.",
+        "save": "Save changes",
+        "create": "Create draft"
+      },
+      "created": "Draft created. Add photos and videos, then submit it for review.",
+      "designSaved": "Design saved.",
+      "deleted": "Design deleted.",
+      "delete": "Delete design",
+      "deleteConfirm": "Delete this design and its photos? This cannot be undone.",
+      "confirmDelete": "Yes, delete",
+      "cancel": "Cancel",
+      "editPublishedWarning": "This design is public. Saving any change takes it off the site until it is approved again.",
+      "lockedWhileReview": "This design is under review. Withdraw it to make changes.",
+      "photos": "Photos",
+      "photosHint": "{count} of {max} photos. The cover is shown on cards.",
+      "addPhoto": "Add a photo",
+      "altText": "Short description of the photo",
+      "uploadPhoto": "Upload photo",
+      "uploading": "Uploading…",
+      "setCover": "Use as cover",
+      "isCover": "Cover",
+      "moveUp": "Move earlier",
+      "moveDown": "Move later",
+      "removeMedia": "Remove",
+      "videos": "Videos",
+      "videosHint": "{count} of {max} videos. YouTube or Vimeo links only.",
+      "videoUrl": "YouTube or Vimeo link",
+      "videoUrlHint": "For example https://www.youtube.com/watch?v=… or https://vimeo.com/…",
+      "videoTitle": "Video title (optional)",
+      "addVideo": "Add video",
+      "submitTitle": "Review",
+      "submit": "Submit for review",
+      "submitHint": "The ALO MART team checks every design before it is published.",
+      "needVerify": "Verify your email address before submitting.",
+      "needApproval": "Your designer profile must be approved before you can submit.",
+      "needPlan": "An active Designer subscription is needed to submit.",
+      "needPhoto": "Add at least one photo before submitting.",
+      "submitted": "Submitted for review.",
+      "withdraw": "Withdraw from review",
+      "withdrawn": "Withdrawn. The design is a draft again.",
+      "mediaRemoved": "Removed.",
+      "coverSaved": "Cover updated.",
+      "orderSaved": "Order saved.",
+      "videoSaved": "Video added.",
+      "viewPublic2": "View on site",
+      "back": "Back to my designs",
+      "publishedHidden": "Approved, but not visible on the site right now: your profile is public only while it is approved and your Designer subscription is active. Nothing has been deleted.",
+      "publishedHiddenShort": "Hidden while your Designer subscription is inactive."
+    },
+    "inspiration": {
+      "intro": "Designers you follow and designs you saved. Separate from your product wishlist.",
+      "designers": "Designers you follow",
+      "designs": "Saved designs",
+      "emptyDesigners": "You don't follow any designers yet.",
+      "emptyDesigns": "You haven't saved any designs yet.",
+      "browse": "Browse designs",
+      "notEntitled": "Customer Plus is not active. Your list stays here, but adding new designers or designs needs an active Customer Plus subscription.",
+      "hidden": "{count, plural, =1 {1 item is} other {# items are}} not public right now and hidden from this list."
+    }
   }
 }

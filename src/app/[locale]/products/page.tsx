@@ -172,34 +172,15 @@ export default async function ProductsPage({ params, searchParams }: Props) {
           { name: t("title"), url: localizedUrl(seoConfig.siteUrl, locale, "/products") },
         ])}
       />
-      <Container className="pt-5 sm:pt-7">
+      <Container className="pt-4 sm:pt-6">
         <Breadcrumbs items={[{ name: tc("home"), href: "/" }, isFiltered(state) ? { name: t("title"), href: "/products" } : { name: t("title") }]} />
 
-        <div className="mt-4 flex flex-col gap-5 lg:mt-5 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <div className="mt-3">
           <div className="min-w-0">
-            <h1 className="tracking-display text-[1.75rem] leading-tight font-extrabold text-balance sm:text-[2.375rem]" data-testid="catalog-heading">
+            <h1 className="tracking-display text-[1.625rem] leading-tight font-extrabold text-balance sm:text-[2.125rem]" data-testid="catalog-heading">
               {heading}
             </h1>
-            {state.q || singleCategory ? null : <p className="mt-1.5 hidden max-w-2xl text-[0.9375rem] text-pretty text-muted-foreground sm:block">{t("intro")}</p>}
-            <ResultCount total={total} />
-          </div>
-          <CatalogSearch className="w-full lg:w-[26rem] lg:shrink-0 xl:w-[30rem]" />
-        </div>
-
-        {/* One toolbar: filter + sort buttons on phones; chips on the start and sort on the end on desktop. */}
-        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 border-b border-border pb-4">
-          <div className="grid w-full grid-cols-2 gap-2 sm:w-auto sm:min-w-80 lg:hidden">
-            {facets ? <MobileFilterSheet data={panel} total={total} /> : null}
-            <SortSheet />
-          </div>
-          <div className="order-last w-full empty:hidden lg:order-none lg:w-auto lg:min-w-0 lg:flex-1">
-            <ActiveFilters labels={labels} currency={currency} />
-          </div>
-          <div className="ms-auto hidden shrink-0 items-center gap-5 lg:flex">
-            {meta && meta.last_page > 1 ? (
-              <p className="text-sm text-muted-foreground tabular-nums">{tc("page", { page: meta.current_page, total: meta.last_page })}</p>
-            ) : null}
-            <SortSelect />
+            {state.q || singleCategory ? null : <p className="mt-1 hidden max-w-2xl text-sm text-pretty text-muted-foreground sm:block">{t("intro")}</p>}
           </div>
         </div>
 
@@ -217,10 +198,10 @@ export default async function ProductsPage({ params, searchParams }: Props) {
         ) : null}
       </Container>
 
-      <Container className="grid gap-8 pt-6 pb-4 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:gap-10">
+      <Container className="grid gap-5 pt-4 pb-4 sm:pt-5 lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:gap-7">
         <aside aria-label={t("filtersHeading")} className="hidden lg:block">
-          <div className="sticky top-[calc(var(--header-height)+1rem)] max-h-[calc(100dvh-var(--header-height)-2rem)] overflow-y-auto overscroll-contain rounded-panel bg-surface px-3 pb-3 shadow-card ring-1 ring-border/70">
-            <h2 className="px-2.5 pt-5 pb-1 text-base font-extrabold">{t("filtersHeading")}</h2>
+          <div className="sticky top-[calc(var(--header-height)+1rem)] max-h-[calc(100dvh-var(--header-height)-2rem)] overflow-y-auto overscroll-contain rounded-card bg-surface px-3 pb-3 shadow-card ring-1 ring-border/70">
+            <h2 className="mx-2.5 border-b border-border pt-4 pb-3 text-base font-extrabold">{t("filtersHeading")}</h2>
             {facets ? (
               <FilterPanel data={panel} idPrefix="d" />
             ) : (
@@ -228,10 +209,30 @@ export default async function ProductsPage({ params, searchParams }: Props) {
                 {t("facetsUnavailable")}
               </p>
             )}
+            {filtered ? (
+              <CatalogLink to={cleared(state)} className={buttonClass({ variant: "outline" }, "mt-2 w-full rounded-xl")} data-testid="sidebar-clear">
+                {t("clearFilters")}
+              </CatalogLink>
+            ) : null}
           </div>
         </aside>
 
-        <CatalogResults page={state.page} heading={t("productsHeading")}>
+        <div className="min-w-0">
+          {/* Count at the start, sort at the end; filter + sort buttons on phones. */}
+          <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-3">
+            <ResultCount total={total} />
+            <CatalogSearch className="order-last w-full lg:order-none lg:ms-auto lg:w-64 xl:w-80" />
+            <div className="grid w-full grid-cols-2 gap-2 sm:w-auto sm:min-w-80 lg:hidden">
+              {facets ? <MobileFilterSheet data={panel} total={total} /> : null}
+              <SortSheet />
+            </div>
+            <SortSelect className="hidden lg:flex" />
+            <div className="w-full empty:hidden">
+              <ActiveFilters labels={labels} currency={currency} />
+            </div>
+          </div>
+
+          <CatalogResults page={state.page} heading={t("productsHeading")}>
           {!listing.ok ? (
             <StatusPanel
               tone="error"
@@ -246,13 +247,13 @@ export default async function ProductsPage({ params, searchParams }: Props) {
             />
           ) : items.length ? (
             <>
-              <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-5 min-[90rem]:grid-cols-4" data-testid="catalog-grid">
+              <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-4 min-[90rem]:grid-cols-4" data-testid="catalog-grid">
                 {items.map((product, index) => (
                   <li key={product.id}>
                     <ProductCard
                       product={product}
                       priority={index < 2}
-                      sizes="(min-width: 1440px) 19vw, (min-width: 1024px) 24vw, (min-width: 768px) 31vw, 48vw"
+                      sizes="(min-width: 1440px) 18vw, (min-width: 1024px) 24vw, (min-width: 768px) 31vw, 48vw"
                     />
                   </li>
                 ))}
@@ -278,7 +279,8 @@ export default async function ProductsPage({ params, searchParams }: Props) {
               action={filtered || state.q ? emptyActions : null}
             />
           )}
-        </CatalogResults>
+          </CatalogResults>
+        </div>
       </Container>
     </CatalogNavigationProvider>
   );

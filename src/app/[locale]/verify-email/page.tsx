@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getCurrentUser } from "@/features/account/session";
 import { AuthShell } from "@/features/account/ui/AuthShell";
-import { Notice } from "@/features/account/ui/fields";
-import { VerifyEmail } from "@/features/account/ui/VerifyEmail";
+import { VerifyEmail, VerifyResult } from "@/features/account/ui/VerifyEmail";
 import type { Locale } from "@/lib/i18n/routing";
 import { pageMetadata } from "@/lib/seo/site";
 
@@ -19,10 +19,19 @@ export default async function Page({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const query = await searchParams;
   const token = typeof query.token === "string" && /^[A-Za-z0-9]{64}$/.test(query.token) ? query.token : null;
-  const t = await getTranslations("Auth");
+  const [t, current] = await Promise.all([getTranslations("Auth"), getCurrentUser(locale)]);
+  const signedIn = current.status === "signed_in";
   return (
     <AuthShell title={t("verify.title")}>
-      {token ? <VerifyEmail token={token} /> : <Notice tone="warning">{t("verify.invalid.body")}</Notice>}
+      {signedIn && current.user.email_verified_at ? (
+        // Already confirmed (e.g. reopening a used link): say so, and leave the link unused.
+        <VerifyResult outcome={{ status: "already", signedIn: true }} />
+      ) : token ? (
+        <VerifyEmail token={token} />
+      ) : (
+        // Malformed or missing: the same answer as an unknown link, with a way to get a new one.
+        <VerifyResult outcome={{ status: "invalid", signedIn }} />
+      )}
     </AuthShell>
   );
 }

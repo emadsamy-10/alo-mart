@@ -7,7 +7,8 @@ import type { HomepageSection } from "./model";
  * banner/CMS endpoint, so nothing here is invented:
  *   - main banner: a product from the first `featured_products` section
  *     (else the first product section), preferring a landscape photo that
- *     suits a wide banner;
+ *     suits a wide banner; further slides are other landscape photos from the
+ *     product sections (a carousel only when more than one exists);
  *   - side cards: the Admin's category-targeted product sections (title +
  *     target category + a product photo from that section), topped up with
  *     departments that have their own image.
@@ -35,6 +36,8 @@ export interface HeroDepartment {
 
 export interface HeroContent {
   feature: HeroFeature | null;
+  /** The main banner first, then up to two more. */
+  slides: HeroFeature[];
   promos: HeroPromo[];
 }
 
@@ -50,7 +53,7 @@ function bestImage(products: ProductCard[], preferLandscape: boolean, exclude: S
   return (preferLandscape && candidates.find((c) => isLandscape(c.image))) || candidates[0] || null;
 }
 
-export function pickHeroContent(sections: HomepageSection[], departments: HeroDepartment[], maxPromos = 2): HeroContent {
+export function pickHeroContent(sections: HomepageSection[], departments: HeroDepartment[], maxPromos = 2, maxSlides = 3): HeroContent {
   const productSections = sections.filter((s): s is ProductSection => s.kind === "product");
   const used = new Set<number>();
 
@@ -87,8 +90,15 @@ export function pickHeroContent(sections: HomepageSection[], departments: HeroDe
     });
   }
 
-  return {
-    feature: main ? { product: main.product, image: main.image, eyebrow: source?.title ?? null } : null,
-    promos,
-  };
+  const feature = main ? { product: main.product, image: main.image, eyebrow: source?.title ?? null } : null;
+  const slides: HeroFeature[] = feature ? [feature] : [];
+  for (const section of productSections) {
+    if (!feature || slides.length >= maxSlides) break;
+    const pick = bestImage(section.items, true, used);
+    if (!pick || !isLandscape(pick.image)) continue;
+    used.add(pick.product.id);
+    slides.push({ product: pick.product, image: pick.image, eyebrow: section.title });
+  }
+
+  return { feature, slides, promos };
 }

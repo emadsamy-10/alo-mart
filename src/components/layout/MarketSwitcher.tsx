@@ -53,33 +53,33 @@ export function MarketSwitcher({ markets, current, trigger = "pill", align = "en
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger
-        aria-label={
-          trigger !== "button"
-            ? active
-              ? t("currentMarket", { name: active.name, currency: active.currencyCode })
-              : t("market")
-            : undefined
-        }
         className={cn(
           trigger === "pill"
             ? "inline-flex h-11 items-center gap-1.5 rounded-full border border-border bg-surface ps-3 pe-2.5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:border-border-strong data-[state=open]:border-border-strong"
             : trigger === "utility"
-              ? "-ms-2.5 inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[0.8125rem] font-semibold text-foreground transition-colors hover:bg-surface data-[state=open]:bg-surface"
+              ? "inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[0.8125rem] font-semibold text-utility-foreground transition-colors hover:bg-white/10 data-[state=open]:bg-white/10"
               : "inline-flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-ink-foreground",
         )}
       >
-        <Globe2 className="size-4 text-muted-foreground" aria-hidden />
+        <Globe2 className={cn("size-4", trigger === "utility" ? "text-utility-muted" : "text-muted-foreground")} aria-hidden />
+        {trigger !== "button" ? <span className="sr-only">{t("market")}: </span> : null}
         {trigger === "pill" ? (
-          <span>{active?.code ?? current}</span>
+          <>
+            <span>{active?.code ?? current}</span>
+            {active ? <span className="sr-only"> ({t("currentMarket", { name: active.name, currency: active.currencyCode })})</span> : null}
+          </>
         ) : trigger === "utility" ? (
           <>
             <span>{active?.name ?? current}</span>
-            <span className="font-medium text-muted-foreground">{active?.currencyCode}</span>
+            <span className="font-medium text-utility-muted">
+              {active?.currencyCode}
+              {active?.currencySymbol ? ` (${active.currencySymbol})` : ""}
+            </span>
           </>
         ) : (
           <span>{t("chooseMarket")}</span>
         )}
-        <ChevronDown className="size-4 text-muted-foreground" aria-hidden />
+        <ChevronDown className={cn("size-4", trigger === "utility" ? "text-utility-muted" : "text-muted-foreground")} aria-hidden />
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content

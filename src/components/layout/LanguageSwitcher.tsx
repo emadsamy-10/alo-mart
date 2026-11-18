@@ -62,14 +62,14 @@ export function LanguageSwitcher({
           href={pathname}
           locale={l}
           hrefLang={l}
-          aria-label={t("changeLanguage", { language: t(`languages.${locale}`) })}
           className={cn(
-            "inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[0.8125rem] font-semibold text-foreground transition-colors hover:bg-surface",
+            "inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[0.8125rem] font-semibold text-utility-foreground transition-colors hover:bg-white/10",
             className,
           )}
         >
-          <Languages className="size-4 text-muted-foreground" aria-hidden />
+          <Languages className="size-4 text-utility-muted" aria-hidden />
           <span lang={l}>{t(`languages.${l}`)}</span>
+          <span className="sr-only"> ({t("changeLanguage", { language: t(`languages.${locale}`) })})</span>
         </Link>
       ))}
     </>

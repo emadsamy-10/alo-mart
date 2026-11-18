@@ -15,7 +15,9 @@
   --surface: #ffffff;        /* cards, tiles, header search area */
   --surface-muted: #f4f0e9;
   --sand: #ede7de;
-  --utility: #f3eee6;        /* utility bar above the header */
+  --utility: #0f1e30;        /* deep navy utility strip above the header */
+  --utility-foreground: #f4f1ec;
+  --utility-muted: #aeb7c4;
   --muted-foreground: #5a616b;
   --border: #ebe5dc;
   --border-strong: #d8cfc3;
@@ -25,11 +27,11 @@
   --ink-muted: #b7bccb;
   --ink-raised: #1f2c3e;
 
-  --brand: #c9183d;          /* crimson fills — primary CTA, cart-style buttons, badges */
-  --brand-text: #c9183d;     /* red text — prices, active tab, links (5.3:1 on ivory) */
+  --brand: #d40f33;          /* ALO MART red: primary CTA, cart buttons, badges, active underline */
+  --brand-text: #c80e30;     /* red text: prices, active nav, links (5.3:1 on ivory) */
   --brand-foreground: #ffffff;
   --brand-soft: #f7e4e2;     /* rose tint ("more" tile, discount chips) */
-  --brand-ink: #a3112f;      /* hover / text on brand-soft */
+  --brand-ink: #a80b28;      /* hover / text on brand-soft */
 
   --success: #17803d;
   --success-soft: #e7f5ec;
@@ -38,9 +40,10 @@
   --danger: #b42318;
   --danger-soft: #fdecea;
 
+  --hero-wash: #f6ebe2;      /* warm tint behind the hero headline */
   --image-well: #f3efe9;     /* behind product photography */
   --skeleton: #ebe4db;
-  --focus-ring: #c9183d;
+  --focus-ring: #d40f33;
   --overlay: rgb(20 32 47 / 0.5);   /* modal/drawer scrim */
   --scrim: rgb(9 14 22 / 0.62);     /* text-on-photo gradient stop */
 
@@ -63,13 +66,15 @@
   --duration-base: 260ms;
   --duration-slow: 520ms;
 
-  --header-height: 4.25rem;  /* height of the sticky header (mobile bar) */
+  --header-height: 3.75rem;  /* visible height of the pinned header: the search row on phones */
+  --header-collapse: 3.75rem; /* part of the header that scrolls away: the logo row on phones */
 }
 
-/* Desktop sticky header height (floating navigation row). */
+/* Desktop: the logo + search row scrolls away, the navigation row stays pinned. */
 @media (min-width: 64rem) {
   :root {
-    --header-height: 5.25rem;
+    --header-height: 3.5rem;
+    --header-collapse: 5.5rem;
   }
 }
 
@@ -79,7 +84,9 @@
   --surface: #131b2e;
   --surface-muted: #1a2338;
   --sand: #232c42;
-  --utility: #080d19;
+  --utility: #060a14;
+  --utility-foreground: #f3efe8;
+  --utility-muted: #98a2b1;
   --muted-foreground: #a9adb5;
   --border: #243049;
   --border-strong: #33405e;
@@ -102,6 +109,7 @@
   --danger: #f87171;
   --danger-soft: #3a1515;
 
+  --hero-wash: #172036;
   --image-well: #ebe6df;     /* stays light: product cut-outs are shot on white */
   --skeleton: #1d2740;
   --focus-ring: #ff8a9c;
@@ -122,7 +130,7 @@
 :root {
   --on-media: #ffffff;
   --on-media-foreground: #14202f;
-  --on-media-accent: #c9183d;
+  --on-media-accent: #d40f33;
 }
 
 /* Navy band (deals) — navy in both themes, a step lighter than the dark page. */
@@ -161,9 +169,12 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-hero-wash: var(--hero-wash);
   --color-image-well: var(--image-well);
   --color-skeleton: var(--skeleton);
   --color-utility: var(--utility);
+  --color-utility-foreground: var(--utility-foreground);
+  --color-utility-muted: var(--utility-muted);
   --color-on-media: var(--on-media);
   --color-on-media-foreground: var(--on-media-foreground);
   --color-on-media-accent: var(--on-media-accent);
@@ -201,12 +212,9 @@
     text-rendering: optimizeLegibility;
     scroll-padding-top: calc(var(--header-height) + 1rem);
   }
-  /* Script-led font stacks: Arabic pages lead with Tajawal, others with Geist. */
+  /* Alexandria covers Arabic and Latin, so both locales share one stack. */
   html {
-    --font-stack: var(--font-latin-face), var(--font-arabic-face), ui-sans-serif, system-ui, sans-serif;
-  }
-  html[lang="ar"] {
-    --font-stack: var(--font-arabic-face), var(--font-latin-face), ui-sans-serif, system-ui, sans-serif;
+    --font-stack: var(--font-alexandria), ui-sans-serif, system-ui, sans-serif;
   }
   body {
     background: var(--background);

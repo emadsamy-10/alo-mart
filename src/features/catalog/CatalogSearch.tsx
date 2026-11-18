@@ -54,11 +54,10 @@ export function CatalogSearch({ className }: { className?: string }) {
   };
 
   return (
-    <form role="search" onSubmit={submit} className={cn("relative", className)} data-testid="catalog-search">
+    <form role="search" aria-label={t("searchWithin")} onSubmit={submit} className={cn("relative", className)} data-testid="catalog-search">
       <label htmlFor="catalog-q" className="sr-only">
-        {t("searchLabel")}
+        {t("searchWithin")}
       </label>
-      <Search className="pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden />
       <input
         ref={input}
         id="catalog-q"
@@ -72,22 +71,22 @@ export function CatalogSearch({ className }: { className?: string }) {
           setValue(e.target.value);
           if (error) setError(false);
         }}
-        placeholder={t("searchPlaceholder")}
+        placeholder={t("searchWithinPlaceholder")}
         aria-invalid={error || undefined}
         aria-describedby={error ? errorId : undefined}
         className={cn(
-          "h-13 w-full rounded-full border bg-surface ps-12 pe-26 text-[0.9375rem] shadow-card outline-none transition-colors placeholder:text-muted-foreground/80 [&::-webkit-search-cancel-button]:hidden",
-          "focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-(--focus-ring)/25",
+          "h-10 w-full rounded-xl border bg-surface ps-3.5 pe-18 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground/80 [&::-webkit-search-cancel-button]:hidden",
+          "focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-(--focus-ring)/25",
           error ? "border-danger" : "border-border",
         )}
       />
-      <div className="absolute end-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
+      <div className="absolute end-1 top-1/2 flex -translate-y-1/2 items-center">
         {value ? (
           <button
             type="button"
             onClick={clear}
             aria-label={t("clearSearch")}
-            className="grid size-10 place-items-center rounded-full text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
+            className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
           >
             <X className="size-4" aria-hidden />
           </button>
@@ -96,7 +95,7 @@ export function CatalogSearch({ className }: { className?: string }) {
           type="submit"
           aria-label={t("searchSubmit")}
           disabled={pending}
-          className="grid h-10 w-12 place-items-center rounded-full bg-ink text-ink-foreground transition hover:bg-ink/90 disabled:opacity-70"
+          className="grid size-8 place-items-center rounded-lg text-foreground transition-colors hover:bg-surface-muted disabled:opacity-70"
         >
           <Search className="size-4" aria-hidden />
         </button>

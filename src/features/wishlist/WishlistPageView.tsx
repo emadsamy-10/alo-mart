@@ -7,6 +7,7 @@ import { AppImage } from "@/components/shared/AppImage";
 import { buttonClass } from "@/components/ui/button";
 import { refreshWishlist, type WishlistSnapshot } from "@/features/cart/actions";
 import { formatMoney } from "@/lib/i18n/format";
+import { useAccountPending, useSignedIn } from "@/features/account/shop-state";
 import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils/cn";
 import { useWishlist } from "./store";
@@ -23,6 +24,8 @@ export function WishlistPageView() {
   const t = useTranslations("Wishlist");
   const locale = useLocale();
   const hydrated = useHydrated();
+  const accountPending = useAccountPending();
+  const signedIn = useSignedIn();
   const { entries, remove } = useWishlist();
   const [snapshots, setSnapshots] = useState<Record<string, WishlistSnapshot>>({});
   const [pending, startTransition] = useTransition();
@@ -40,7 +43,8 @@ export function WishlistPageView() {
     });
   }, [key]);
 
-  if (!hydrated) return <div className="min-h-64" aria-busy="true" />;
+  // Signed in: wait for the account's list instead of flashing the device's empty one.
+  if (!hydrated || accountPending) return <div className="min-h-64" aria-busy="true" />;
 
   if (!entries.length) {
     return (
@@ -49,7 +53,7 @@ export function WishlistPageView() {
           <Heart className="size-7" />
         </span>
         <h2 className="mt-5 text-xl font-bold">{t("emptyTitle")}</h2>
-        <p className="mt-1 text-muted-foreground">{t("emptyBody")}</p>
+        <p className="mt-1 text-muted-foreground">{t(signedIn ? "emptyBodyAccount" : "emptyBody")}</p>
         <Link href="/products" className={buttonClass({ variant: "primary" }, "mt-6")}>
           {t("browse")}
         </Link>

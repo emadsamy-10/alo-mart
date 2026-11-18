@@ -75,7 +75,7 @@ export function ActiveFilters({ labels, currency }: { labels: FilterLabels; curr
           key={chip.key}
           to={chip.to}
           aria-label={t("removeFilter", { name: chip.label })}
-          className="inline-flex h-11 max-w-full items-center gap-1.5 rounded-full bg-ink ps-3.5 pe-3 text-[0.8125rem] font-semibold text-ink-foreground transition hover:bg-ink/85 lg:h-9 lg:pe-2.5"
+          className="inline-flex h-11 max-w-full items-center gap-1.5 rounded-full bg-brand-soft ps-3.5 pe-3 text-[0.8125rem] font-semibold text-brand-ink transition-colors hover:bg-brand-soft/70 lg:h-9 lg:pe-2.5"
           data-testid="filter-chip"
         >
           <span className="truncate">{chip.label}</span>

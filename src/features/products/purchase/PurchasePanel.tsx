@@ -114,8 +114,12 @@ export function PurchasePanel() {
         return (
           <fieldset key={axis.id} className="space-y-3">
             <legend className="text-sm font-bold">
-              {axis.name}
-              {chosen ? <span className="ms-2 font-medium text-muted-foreground">{chosen.name}</span> : null}
+              {/* One string for screen readers ("Color: White", not "ColorWhite"); the styled parts are visual only. */}
+              <span className="sr-only">{chosen ? `${axis.name}: ${chosen.name}` : axis.name}</span>
+              <span aria-hidden>
+                {axis.name}
+                {chosen ? <span className="ms-2 font-medium text-muted-foreground">{chosen.name}</span> : null}
+              </span>
             </legend>
             <div role="radiogroup" aria-label={axis.name} className="flex flex-wrap gap-2.5">
               {axis.values.map((value) => {
@@ -212,7 +216,8 @@ export function PurchasePanel() {
           onClick={add}
           disabled={!!variant && !purchasable}
           data-testid="add-to-cart"
-          className="inline-flex h-14 min-w-0 flex-1 items-center justify-center gap-2.5 rounded-full bg-brand px-6 text-base font-bold text-brand-foreground shadow-[0_12px_28px_-14px_var(--brand)] transition-[background-color,transform] hover:bg-brand-ink active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-muted-foreground/40 disabled:shadow-none"
+          // An 11rem basis lets the row wrap (button to its own line) instead of squeezing the label onto two lines on phones.
+          className="inline-flex h-14 min-w-0 flex-[1_1_11rem] items-center justify-center gap-2.5 rounded-full bg-brand px-6 text-base font-bold whitespace-nowrap text-brand-foreground shadow-[0_12px_28px_-14px_var(--brand)] transition-[background-color,transform] hover:bg-brand-ink active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-muted-foreground/40 disabled:shadow-none"
         >
           {status === "added" ? <Check className="size-5" aria-hidden /> : <ShoppingBag className="size-5" aria-hidden />}
           {status === "added" ? t("added") : addLabel}

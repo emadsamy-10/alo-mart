@@ -1,15 +1,15 @@
 "use client";
 
-import { ChevronDown, Heart, LayoutGrid, Menu, UserRound, X } from "lucide-react";
+import { ChevronDown, Menu, Percent, UserRound, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
-import { useState } from "react";
 import type { HeaderAccount } from "@/features/account/ui/AccountMenu";
 import { SignOutButton } from "@/features/account/ui/AccountNav";
 import { Link } from "@/lib/i18n/navigation";
-import { HeaderSearchForm } from "./HeaderSearch";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { setMobileMenuOpen, useMobileMenu } from "./mobile-menu-store";
+import { NAV_LINKS } from "./nav-links";
 import type { NavCategory } from "./nav-types";
 
 /**
@@ -22,16 +22,16 @@ export function MobileMenu({ departments, account = null }: { departments: NavCa
   const ta = useTranslations("Account.nav");
   const tc = useTranslations("Common");
   const tp = useTranslations("Preferences");
-  const [open, setOpen] = useState(false);
-  const close = () => setOpen(false);
+  const [open, setOpen] = useMobileMenu();
+  const close = () => setMobileMenuOpen(false);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         aria-label={t("openMenu")}
-        className="inline-flex size-11 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-sm"
+        className="-ms-1.5 inline-flex size-11 items-center justify-center rounded-full text-foreground transition-colors hover:bg-surface-muted"
       >
-        <Menu className="size-5" aria-hidden />
+        <Menu className="size-6" aria-hidden />
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="sheet-overlay fixed inset-0 z-50 bg-overlay backdrop-blur-[2px]" />
@@ -48,7 +48,6 @@ export function MobileMenu({ departments, account = null }: { departments: NavCa
           <Dialog.Description className="sr-only">{t("mainNavigation")}</Dialog.Description>
 
           <nav aria-label={t("departments")} className="flex-1 overflow-y-auto overscroll-contain px-3 py-4">
-            <HeaderSearchForm className="mb-3" />
             <div className="mb-3 rounded-2xl bg-surface p-3 shadow-card" data-testid="mobile-account">
               {account ? (
                 <>
@@ -78,19 +77,23 @@ export function MobileMenu({ departments, account = null }: { departments: NavCa
                 </div>
               )}
             </div>
-            <ul className="mb-4 grid grid-cols-2 gap-2">
-              <li>
-                <Link href="/products" onClick={close} className="flex min-h-12 items-center gap-2 rounded-2xl bg-surface px-3 text-sm font-semibold shadow-card">
-                  <LayoutGrid className="size-4 text-brand-text" aria-hidden />
-                  {t("allProducts")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/wishlist" onClick={close} className="flex min-h-12 items-center gap-2 rounded-2xl bg-surface px-3 text-sm font-semibold shadow-card">
-                  <Heart className="size-4 text-brand-text" aria-hidden />
-                  {t("wishlist")}
-                </Link>
-              </li>
+            <ul className="mb-4 grid grid-cols-2 gap-2" data-testid="mobile-nav-links">
+              {NAV_LINKS.filter((link) => link.key !== "home").map(({ key, href }) => (
+                <li key={key} className={key === "offers" ? "col-span-2" : undefined}>
+                  <Link
+                    href={href}
+                    onClick={close}
+                    className={
+                      key === "offers"
+                        ? "flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand-soft px-3 text-sm font-bold text-brand-ink"
+                        : "flex min-h-12 items-center rounded-2xl bg-surface px-3 text-sm font-semibold shadow-card"
+                    }
+                  >
+                    {key === "offers" ? <Percent className="size-4" aria-hidden /> : null}
+                    {t(key)}
+                  </Link>
+                </li>
+              ))}
             </ul>
             <p className="px-2 pb-2 text-sm font-semibold text-muted-foreground">{t("departments")}</p>
             <ul className="space-y-1">

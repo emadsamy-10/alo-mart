@@ -2,8 +2,9 @@
 
 import { AlertCircle, Loader2, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { unstable_rethrow } from "next/navigation";
 import { useActionState, useState, useTransition } from "react";
-import { IDLE } from "@/features/account/form-state";
+import { IDLE, type FormState } from "@/features/account/form-state";
 import type { Address } from "@/features/account/schemas";
 import { FormAlert, SubmitButton } from "@/features/account/ui/fields";
 import { Link } from "@/lib/i18n/navigation";
@@ -43,30 +44,44 @@ export function CheckoutForm({ addresses, initialAddressId, initialQuote, initia
   const [method, setMethod] = useState(methods.length === 1 ? methods[0].code : "");
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [quoting, startQuote] = useTransition();
-  const [state, action] = useActionState(placeOrderAction, IDLE);
+  // A lost connection must not replace the form with an error page: the shopper keeps the form and
+  // its idempotency key, so trying again can never create a second order, even if the first request got through.
+  const [state, action] = useActionState(async (previous: FormState, form: FormData): Promise<FormState> => {
+    try {
+      return await placeOrderAction(previous, form);
+    } catch (error) {
+      unstable_rethrow(error); // the redirect to the placed order
+      return { status: "error", message: t("errors.placeInterrupted") };
+    }
+  }, IDLE);
 
   const money = (value: string | null) => formatMoney(value, quote.currency, locale) ?? "—";
   const sep = locale === "ar" ? "، " : ", ";
 
   const requote = (nextAddress: number, nextSelections: ShippingSelections) => {
     startQuote(async () => {
-      const result = await requoteAction(nextAddress, nextSelections);
-      if (!result.ok) {
-        setQuoteError(result.message);
-        return;
+      try {
+        const result = await requoteAction(nextAddress, nextSelections);
+        if (!result.ok) {
+          setQuoteError(result.message);
+          return;
+        }
+        setQuoteError(null);
+        const reconciled = defaultSelections(result.quote, nextSelections);
+        // New options (another address) → quote once more with the reconciled choice.
+        if (JSON.stringify(reconciled) !== JSON.stringify(nextSelections)) {
+          const again = await requoteAction(nextAddress, reconciled);
+          setSelections(reconciled);
+          if (again.ok) setQuote(again.quote);
+          else setQuoteError(again.message);
+          return;
+        }
+        setSelections(nextSelections);
+        setQuote(result.quote);
+      } catch (error) {
+        unstable_rethrow(error);
+        setQuoteError(t("errors.quote"));
       }
-      setQuoteError(null);
-      const reconciled = defaultSelections(result.quote, nextSelections);
-      // New options (another address) → quote once more with the reconciled choice.
-      if (JSON.stringify(reconciled) !== JSON.stringify(nextSelections)) {
-        const again = await requoteAction(nextAddress, reconciled);
-        setSelections(reconciled);
-        if (again.ok) setQuote(again.quote);
-        else setQuoteError(again.message);
-        return;
-      }
-      setSelections(nextSelections);
-      setQuote(result.quote);
     });
   };
 

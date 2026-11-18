@@ -9,7 +9,8 @@ import { resendVerificationAction, verifyEmailAction } from "../actions";
 import { IDLE } from "../form-state";
 import { FormAlert, SubmitButton } from "./fields";
 
-type Outcome = Awaited<ReturnType<typeof verifyEmailAction>>;
+export type VerifyOutcome = Awaited<ReturnType<typeof verifyEmailAction>>;
+type Outcome = VerifyOutcome;
 
 /**
  * Confirms the emailed link. The token is submitted by script after the page
@@ -36,6 +37,15 @@ export function VerifyEmail({ token }: { token: string }) {
     );
   }
 
+  return <VerifyResult outcome={outcome} />;
+}
+
+/**
+ * The outcome of a confirmation link, always with a way forward. Also rendered by the page itself
+ * (no API call) for a malformed or missing link, and for a signed-in customer who is already verified.
+ */
+export function VerifyResult({ outcome }: { outcome: Outcome }) {
+  const t = useTranslations("Auth.verify");
   const ok = outcome.status === "verified" || outcome.status === "already";
   const continueHref = outcome.signedIn ? "/account" : "/login";
 

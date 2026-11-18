@@ -8,7 +8,7 @@ import type { AccountError, AccountResult } from "@/lib/api/account-client";
 import type { Locale } from "@/lib/i18n/routing";
 import { deviceName } from "./device";
 import { firstErrors, secret, text, type FormState } from "./form-state";
-import { loginHref, safeNext } from "./redirect";
+import { afterRegister, loginHref, safeNext } from "./redirect";
 import {
   addressSchema,
   anySchema,
@@ -109,8 +109,7 @@ export async function registerAction(_prev: FormState, form: FormData): Promise<
   if (!result.ok) return failure(result.error, values);
 
   await writeSessionToken(result.data.token, result.data.expires_at);
-  const next = safeNext(form.get("next"), "");
-  return redirect({ href: next && next !== "/account" ? next : "/account?welcome=1", locale });
+  return redirect({ href: afterRegister(safeNext(form.get("next"), ""), result.data.verification_email_sent), locale });
 }
 
 export async function logoutAction(): Promise<void> {
@@ -177,6 +176,8 @@ export async function resendVerificationAction(): Promise<FormState> {
   const result = await requireSession(await accountCall("POST", "/user/auth/email/resend", verifyResultSchema.pick({ already_verified: true }), { locale }), "/account/security");
   if (!result.ok) {
     if (result.error.code === "resend_too_soon") return { status: "error", code: "resend_too_soon", message: t("verify.tooSoon") };
+    // The mail transport is down: say that, not a generic "something went wrong".
+    if (result.error.code === "mail_delivery_failed") return { status: "error", code: "mail_delivery_failed", message: t("verify.notSent") };
     return failure(result.error);
   }
   // Verified meanwhile (e.g. in another tab): nothing was sent.
@@ -234,7 +235,9 @@ export async function changeEmailAction(_prev: FormState, form: FormData): Promi
   );
   if (!result.ok) return failure(result.error, { email });
   refreshAccount();
-  return { status: "success", message: t("security.emailChanged", { email: result.data.account.email }) };
+  // Truthful about the confirmation link: the backend says whether it could send it.
+  const key = result.data.verification_email_sent ? "security.emailChanged" : "security.emailChangedUnsent";
+  return { status: "success", message: t(key, { email: result.data.account.email }) };
 }
 
 export async function changePhoneAction(_prev: FormState, form: FormData): Promise<FormState> {

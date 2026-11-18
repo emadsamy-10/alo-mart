@@ -9,7 +9,17 @@ import { loginHref } from "../redirect";
 import { ACCOUNT_LINKS, SignOutButton } from "./AccountNav";
 
 const trigger =
-  "relative grid size-11 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground shadow-sm transition hover:border-border-strong";
+  "relative flex h-11 shrink-0 items-center gap-2 rounded-full px-2.5 text-start text-foreground transition-colors duration-(--duration-fast) hover:bg-surface-muted data-[state=open]:bg-surface-muted";
+
+/** Two quiet lines beside the icon; below 1280px the icon stands alone. */
+function Lines({ top, bottom }: { top: string; bottom: string }) {
+  return (
+    <span className="hidden flex-col leading-tight xl:flex">
+      <span className="text-[0.8125rem] font-bold whitespace-nowrap">{top}</span>
+      <span className="text-xs whitespace-nowrap text-muted-foreground">{bottom}</span>
+    </span>
+  );
+}
 
 export interface HeaderAccount {
   firstName: string;
@@ -37,21 +47,24 @@ export function AccountMenu({ account, className }: { account: HeaderAccount | n
           event.preventDefault();
           router.push(loginHref(pathname + window.location.search));
         }}
-        aria-label={t("signIn")}
         title={t("signIn")}
         className={cn(trigger, className)}
         data-testid="header-sign-in"
       >
-        <UserRound className="size-5" aria-hidden />
+        <UserRound className="size-6 shrink-0" aria-hidden />
+        <Lines top={t("guestGreeting")} bottom={t("guestRegister")} />
       </Link>
     );
   }
 
   return (
     <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger aria-label={t("menuFor", { name: account.firstName })} className={cn(trigger, className)} data-testid="account-menu">
-        <UserRound className="size-5" aria-hidden />
-        <span className="absolute -end-0.5 -bottom-0.5 size-3 rounded-full bg-success ring-2 ring-background" aria-hidden />
+      <DropdownMenu.Trigger className={cn(trigger, className)} data-testid="account-menu">
+        <span className="relative shrink-0">
+          <UserRound className="size-6" aria-hidden />
+          <span className="absolute -end-0.5 -bottom-0.5 size-2.5 rounded-full bg-success ring-2 ring-surface" aria-hidden />
+        </span>
+        <Lines top={t("hello", { name: account.firstName })} bottom={t("myAccount")} />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content align="end" sideOffset={8} className="z-50 w-60 rounded-3xl border border-border bg-surface p-2 shadow-popover">

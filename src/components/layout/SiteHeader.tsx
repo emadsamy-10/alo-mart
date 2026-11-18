@@ -1,14 +1,16 @@
+import { Headset, PackageSearch, Truck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Container } from "@/components/shared/Container";
 import type { MarketOption } from "@/features/markets/types";
 import { AccountMenu, type HeaderAccount } from "@/features/account/ui/AccountMenu";
 import { HeaderShopButtons } from "@/features/cart/HeaderShopButtons";
-import { DepartmentsMenu } from "./DepartmentsMenu";
-import { HeaderSearch } from "./HeaderSearch";
+import { Link } from "@/lib/i18n/navigation";
+import { HeaderSearch, HeaderSearchForm } from "./HeaderSearch";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
+import { MainNav } from "./MainNav";
 import { MarketSwitcher } from "./MarketSwitcher";
 import { MobileMenu } from "./MobileMenu";
-import { PrimaryNav } from "./PrimaryNav";
 import { StickyHeader } from "./StickyHeader";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import type { NavCategory } from "./nav-types";
@@ -21,59 +23,94 @@ interface SiteHeaderProps {
   account?: HeaderAccount | null;
 }
 
+const NAV_CONTAINER = "mx-auto w-full max-w-[88rem] px-4 sm:px-6 lg:px-8";
+
 /**
- * Slim desktop preferences strip (36px): market/currency at the start,
- * language and theme at the end. Scrolls away; the navigation stays.
+ * Thin navy strip (desktop). Facts only: delivery is decided per address at
+ * checkout, so no coverage is promised; support appears when the platform
+ * publishes an address. Scrolls away with the page.
  */
-export function UtilityBar({ markets, market }: Omit<SiteHeaderProps, "departments" | "account">) {
+export function UtilityBar({ markets, market, supportEmail }: Omit<SiteHeaderProps, "departments" | "account"> & { supportEmail: string | null }) {
+  const t = useTranslations("Header");
+  const item = "inline-flex h-8 items-center gap-1.5 text-[0.8125rem] font-medium text-utility-foreground transition-colors hover:text-white";
+
   return (
-    <div className="hidden bg-utility lg:block">
+    <section aria-label={t("preferences")} className="hidden bg-utility text-utility-foreground lg:block" data-testid="utility-bar">
       <Container className="flex h-9 items-center justify-between gap-4">
-        <MarketSwitcher markets={markets} current={market} trigger="utility" align="start" />
-        <div className="flex items-center gap-1">
+        <div className="flex min-w-0 items-center gap-5">
+          <p className={item}>
+            <Truck className="size-4 shrink-0 text-utility-muted" aria-hidden />
+            <span className="truncate">{t("deliveryNote")}</span>
+          </p>
+          <span className="h-3.5 w-px bg-white/20" aria-hidden />
+          <Link href="/account/orders" className={item}>
+            <PackageSearch className="size-4 text-utility-muted" aria-hidden />
+            {t("myOrders")}
+          </Link>
+          {supportEmail ? (
+            <a href={`mailto:${supportEmail}`} className={item} data-testid="utility-support">
+              <Headset className="size-4 text-utility-muted" aria-hidden />
+              {t("support")}
+            </a>
+          ) : null}
+        </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <MarketSwitcher markets={markets} current={market} trigger="utility" align="end" />
+          <span className="mx-1 h-3.5 w-px bg-white/20" aria-hidden />
           <LanguageSwitcher />
-          <span className="mx-1 h-3.5 w-px bg-border-strong" aria-hidden />
+          <span className="mx-1 h-3.5 w-px bg-white/20" aria-hidden />
           <ThemeSwitcher />
         </div>
       </Container>
-    </div>
+    </section>
   );
 }
 
 /**
- * Floating navigation header.
+ * One responsive header (a single search form and cart in the first row).
  *
- * Desktop (≥1024px): a three-column grid — logo at the start, the rounded
- * navigation capsule at the exact center, the red "All departments" pill at
- * the end (logical order, so RTL mirrors naturally). The capsule shows as
- * many departments as fit; the rest live in the mega menu. Sticky, with a
- * soft shadow once content scrolls under it.
+ * Desktop: logo · large central search · account, wishlist, cart; below it the
+ * navigation row, which stays pinned (with a compact logo, search and cart)
+ * after the first row has scrolled away.
  *
- * Mobile/tablet (<1024px): menu · centered logo · market pill · cart; the
- * account entry lives in the menu drawer.
+ * Phones and tablets: menu · logo · market, cart; below it the search row, which
+ * stays pinned. Sections live in the drawer and the bottom navigation.
  */
 export function SiteHeader({ departments, markets, market, account = null }: SiteHeaderProps) {
   return (
     <StickyHeader>
-      <Container className="grid h-[4.25rem] grid-cols-[auto_1fr_auto] items-center gap-3 lg:hidden">
-        <MobileMenu departments={departments} account={account} />
-        <Logo className="justify-self-center" />
-        <div className="flex items-center gap-2">
-          <MarketSwitcher markets={markets} current={market} trigger="pill" />
-          <HeaderShopButtons showWishlist={false} />
+      <Container className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 [grid-template-areas:'menu_logo_actions''search_search_search'] lg:h-[5.5rem] lg:grid-cols-[minmax(11rem,1fr)_minmax(0,2.5fr)_minmax(11rem,1fr)] lg:gap-x-8 lg:[grid-template-areas:'logo_search_actions'] xl:gap-x-12">
+        <div className="flex h-[3.75rem] items-center [grid-area:menu] lg:hidden">
+          <MobileMenu departments={departments} account={account} />
+        </div>
+        <div className="flex h-[3.75rem] items-center justify-center [grid-area:logo] lg:h-auto lg:justify-start">
+          <Logo />
+        </div>
+        <HeaderSearchForm className="mx-auto h-[3.75rem] w-full max-w-2xl [grid-area:search] max-lg:max-w-none lg:h-auto" />
+        <div className="-me-2 flex h-[3.75rem] items-center justify-end gap-1 [grid-area:actions] lg:-me-2.5 lg:h-auto">
+          <div className="lg:hidden">
+            <MarketSwitcher markets={markets} current={market} trigger="pill" />
+          </div>
+          <div className="hidden lg:block">
+            <AccountMenu account={account} />
+          </div>
+          <HeaderShopButtons wishlistClassName="max-lg:hidden" />
         </div>
       </Container>
 
-      <Container className="hidden h-[5.25rem] grid-cols-[1fr_auto_1fr] items-center gap-6 lg:grid">
-        <Logo className="justify-self-start" />
-        <PrimaryNav departments={departments} />
-        <div className="flex items-center gap-2 justify-self-end">
-          <HeaderSearch />
-          <AccountMenu account={account} />
-          <HeaderShopButtons />
-          {departments.length ? <DepartmentsMenu departments={departments} /> : null}
-        </div>
-      </Container>
+      <div className="hidden border-t border-border/70 lg:block">
+        <MainNav
+          departments={departments}
+          containerClassName={NAV_CONTAINER}
+          compactStart={<Logo compact className="me-2" />}
+          compactEnd={
+            <>
+              <HeaderSearch />
+              <HeaderShopButtons showWishlist={false} />
+            </>
+          }
+        />
+      </div>
     </StickyHeader>
   );
 }

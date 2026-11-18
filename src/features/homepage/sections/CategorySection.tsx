@@ -1,6 +1,7 @@
+import { getTranslations } from "next-intl/server";
 import { AppImage } from "@/components/shared/AppImage";
 import { Carousel } from "@/components/shared/Carousel";
-import { SectionHeading } from "@/components/shared/SectionHeading";
+import { SectionHeading, ViewAllLink } from "@/components/shared/SectionHeading";
 import { Link } from "@/lib/i18n/navigation";
 import type { CategoryCard } from "@/lib/api/schemas";
 import { cn } from "@/lib/utils/cn";
@@ -17,21 +18,21 @@ function CategoryTile({ category, sizes, large }: { category: CategoryCard; size
   return (
     <Link
       href={`/categories/${category.slug}`}
-      className="group flex h-full flex-col rounded-card bg-background p-2 ring-1 ring-border/70 transition-[box-shadow,transform] duration-(--duration-base) ease-out-soft hover:-translate-y-1 hover:shadow-raised lg:p-2.5"
+      className="group flex h-full flex-col overflow-hidden rounded-card bg-surface-muted ring-1 ring-border/60 transition-[box-shadow,transform] duration-(--duration-base) ease-out-soft hover:-translate-y-1 hover:shadow-raised"
     >
-      <span className="block overflow-hidden rounded-well bg-image-well">
+      <span className="block overflow-hidden bg-image-well">
         <AppImage
           src={category.image_url}
           alt=""
-          ratio={large ? "4/3" : "1/1"}
+          ratio="4/3"
           sizes={sizes}
           className="transition-transform duration-(--duration-slow) ease-out-soft group-hover:scale-[1.05]"
         />
       </span>
       <span
         className={cn(
-          "flex flex-1 items-center justify-center px-1 text-center leading-snug font-semibold text-balance text-foreground group-hover:text-brand-text",
-          large ? "min-h-12 pt-3 pb-1.5 text-base lg:text-lg" : "min-h-11 pt-2.5 pb-1 text-sm sm:text-[0.9375rem] lg:text-base",
+          "flex flex-1 items-center justify-center text-center leading-snug font-extrabold text-balance text-foreground group-hover:text-brand-text",
+          large ? "min-h-12 px-2 py-2.5 text-base" : "min-h-11 px-1.5 py-2 text-[0.8125rem] sm:text-sm lg:text-[0.9375rem]",
         )}
       >
         {category.name}
@@ -40,7 +41,7 @@ function CategoryTile({ category, sizes, large }: { category: CategoryCard; size
   );
 }
 
-export function CategorySection({
+export async function CategorySection({
   section,
   headingId,
   title,
@@ -49,12 +50,16 @@ export function CategorySection({
   headingId: string;
   title: string;
 }) {
+  const t = await getTranslations("Sections");
+  const action = <ViewAllLink href="/products" label={t("viewAllCategories")} />;
+
   if (section.layout === "carousel") {
     return (
       <Carousel
         headingId={headingId}
         title={title}
         subtitle={section.subtitle}
+        action={action}
         itemClassName="w-[31%] sm:w-[23%] lg:w-[calc((100%-6.25rem)/6)]"
       >
         {section.items.map((category) => (
@@ -67,7 +72,7 @@ export function CategorySection({
   const large = section.layout === "grid";
   return (
     <>
-      <SectionHeading id={headingId} title={title} subtitle={section.subtitle} />
+      <SectionHeading id={headingId} title={title} subtitle={section.subtitle} action={action} />
       <ul
         className={cn(
           "grid gap-2.5 sm:gap-4 lg:gap-5",

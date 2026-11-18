@@ -61,7 +61,7 @@ export function MobileFilterSheet({ data, total }: { data: FilterPanelData; tota
               {t("reset")}
             </button>
             <Dialog.Close
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-bold text-ink-foreground"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand px-5 text-sm font-bold text-brand-foreground"
               data-testid="show-results"
             >
               {pending ? (

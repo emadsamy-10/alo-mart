@@ -4,6 +4,7 @@ import { ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSyncExternalStore } from "react";
 import { buttonClass } from "@/components/ui/button";
+import { useAccountPending, useSignedIn } from "@/features/account/shop-state";
 import { Link } from "@/lib/i18n/navigation";
 import { CartLineItem, CartSummary, useCartRefresh } from "./CartLines";
 import { useCart } from "./store";
@@ -16,13 +17,22 @@ const useHydrated = () =>
   );
 
 /** Full cart page body (this device's guest cart for the current market). */
-export function CartPageView() {
+/**
+ * Until the cart is known, reserve about the space it will take, so the page doesn't jump: an empty
+ * cart for a guest, a one-line cart for a signed-in visitor (their account cart is loaded after hydration).
+ */
+const PLACEHOLDER = { guest: "min-h-[21rem]", account: "min-h-[35rem] md:min-h-[32.5rem] lg:min-h-[19.5rem]" };
+
+export function CartPageView({ signedIn: signedInOnServer = false }: { signedIn?: boolean }) {
   const t = useTranslations("Cart");
   const hydrated = useHydrated();
+  const accountPending = useAccountPending();
+  const signedIn = useSignedIn();
   const { lines, clear } = useCart();
   const refreshing = useCartRefresh();
 
-  if (!hydrated) return <div className="min-h-64" aria-busy="true" />;
+  // Signed in: wait for the account's list instead of flashing the device's empty one.
+  if (!hydrated || accountPending) return <div className={signedInOnServer ? PLACEHOLDER.account : PLACEHOLDER.guest} aria-busy="true" />;
 
   if (!lines.length) {
     return (
@@ -58,7 +68,7 @@ export function CartPageView() {
       </section>
       <aside className="rounded-panel bg-surface p-6 shadow-card ring-1 ring-border/70 lg:sticky lg:top-[calc(var(--header-height)+1.5rem)]">
         <CartSummary />
-        <p className="mt-4 rounded-xl bg-surface-muted p-3 text-xs leading-relaxed text-muted-foreground">{t("localNote")}</p>
+        <p className="mt-4 rounded-xl bg-surface-muted p-3 text-xs leading-relaxed text-muted-foreground">{t(signedIn ? "accountNote" : "localNote")}</p>
         <Link href="/products" className={buttonClass({ variant: "outline" }, "mt-5 w-full")}>
           {t("continue")}
         </Link>

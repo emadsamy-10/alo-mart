@@ -205,8 +205,8 @@ test.describe("search, sort, URL state", () => {
   test("English and Arabic search; Arabic article-insensitive", async ({ page }) => {
     const en = await api<Listing>("products?market=EG&q=chair&per_page=1");
     await page.goto("/en/products");
-    await page.getByRole("searchbox", { name: "Search products" }).fill("chair");
-    await page.getByRole("searchbox", { name: "Search products" }).press("Enter");
+    await page.getByRole("searchbox", { name: "Search within results" }).fill("chair");
+    await page.getByRole("searchbox", { name: "Search within results" }).press("Enter");
     await expect(page).toHaveURL(/q=chair/);
     await expect(page.getByTestId("catalog-heading")).toContainText("chair");
     expect(await total(page)).toBe(en.meta.total);
@@ -224,11 +224,11 @@ test.describe("search, sort, URL state", () => {
     const phones = await categoryId("smartphones");
     const expected = await api<Listing>(`products?market=EG&q=nordica&category_id[]=${phones}&per_page=1`);
     await page.goto("/en/products?category=smartphones");
-    await page.getByRole("searchbox", { name: "Search products" }).fill("n");
-    await page.getByRole("searchbox", { name: "Search products" }).press("Enter");
+    await page.getByRole("searchbox", { name: "Search within results" }).fill("n");
+    await page.getByRole("searchbox", { name: "Search within results" }).press("Enter");
     await expect(page.getByText("Enter at least 2 characters.")).toBeVisible();
-    await page.getByRole("searchbox", { name: "Search products" }).fill("nordica");
-    await page.getByRole("searchbox", { name: "Search products" }).press("Enter");
+    await page.getByRole("searchbox", { name: "Search within results" }).fill("nordica");
+    await page.getByRole("searchbox", { name: "Search within results" }).press("Enter");
     await expect(page).toHaveURL(/q=nordica&category=smartphones/);
     expect(await total(page)).toBe(expected.meta.total);
   });

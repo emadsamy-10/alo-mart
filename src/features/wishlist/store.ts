@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { accountWishlistToggle } from "@/features/account/shop-actions";
+import type { ShopResult } from "@/features/account/shop-actions";
+import { sendShopWrite } from "@/features/account/shop-writes";
 import { shopState } from "@/features/account/shop-state";
 import { createPersistentStore, usePersistentStore } from "@/lib/persistent-store";
 import { EMPTY_WISHLIST, isSaved, parseWishlist, removeEntry, toggleEntry, type WishlistEntry } from "./wishlist";
@@ -17,7 +18,7 @@ function accountMode(): boolean {
 
 /** Signed in: optimistic change, then the account wishlist from the API replaces it. */
 async function syncAccount(productId: number, save: boolean) {
-  const result = await accountWishlistToggle(productId, save);
+  const result = await sendShopWrite<ShopResult<WishlistEntry[]>>({ type: "wishlistToggle", productId, save });
   if (result.ok) wishlistStore.set(result.data);
   else if (result.signedOut) window.location.reload();
 }

@@ -60,7 +60,7 @@ export function SortSelect({ className }: { className?: string }) {
         <Select.Trigger
           aria-labelledby="sort-label"
           data-testid="sort-select"
-          className="inline-flex h-11 min-w-48 items-center justify-between gap-3 rounded-full border border-border-strong bg-surface ps-4 pe-3 text-sm font-bold shadow-sm outline-none transition hover:border-ink focus-visible:ring-2 focus-visible:ring-(--focus-ring)/40"
+          className="inline-flex h-10 min-w-48 items-center justify-between gap-3 rounded-xl border border-border bg-surface ps-3.5 pe-3 text-sm font-bold shadow-sm outline-none transition-colors hover:border-border-strong focus-visible:ring-2 focus-visible:ring-(--focus-ring)/40"
         >
           <Select.Value>{currentLabel}</Select.Value>
           <Select.Icon>
@@ -154,7 +154,7 @@ export function SortSheet({ className }: { className?: string }) {
                     aria-hidden
                     className={cn(
                       "grid size-6 shrink-0 place-items-center rounded-full border-2",
-                      selected ? "border-ink bg-ink text-ink-foreground" : "border-border-strong",
+                      selected ? "border-brand bg-brand text-brand-foreground" : "border-border-strong",
                     )}
                   >
                     {selected ? <Check className="size-3.5" strokeWidth={3} /> : null}

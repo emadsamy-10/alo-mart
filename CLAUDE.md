@@ -26,8 +26,8 @@ Data comes from the ALO MART Laravel API (staging: `https://api.alo-mart.web-app
 - Market is an httpOnly cookie (`alo_market`), not a URL dimension; default `DEFAULT_MARKET=EG`.
 
 ## Design sources
-- Approved desktop design: `../design-references/homepage.png`. Mobile references: the `*.jpeg`
-  screens in the same folder. Audit: `docs/design-audit.md`.
+- Approved design: `../design-references/alo-home.png` (replaces `homepage.png`; its inset is the All Products
+  page). Mobile references: the `*.jpeg` screens in the same folder. Audit: `docs/design-audit.md`.
 
 ## Commands
 `npm run dev` · `npm run build` · `npx next start -p 3100` · `npm run typecheck` · `npm run lint` ·
